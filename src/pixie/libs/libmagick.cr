@@ -1,0 +1,5 @@
+require "./magick/lib_std"
+require "./magick/types"
+require "./magick/enums"
+require "./magick/MagickCore/**"
+require "./magick/MagickWand/**"

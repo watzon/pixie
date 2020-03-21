@@ -4,7 +4,7 @@
 # Description: Tilt shift image
 # ---------------------------------------------------------------------------- #
 
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 LibMagick.magickWandGenesis
 arglist = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 1.0, 1.0, 1.0]

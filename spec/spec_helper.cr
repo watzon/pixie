@@ -1,5 +1,5 @@
 require "spec"
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 TEST1_PNG = "spec/test1.png"
 TEST2_JPG = "spec/test2.jpg"

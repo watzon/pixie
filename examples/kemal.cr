@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------------- #
 
 require "kemal"
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 get "/" do |env|
   env.response.content_type = "image/jpeg"

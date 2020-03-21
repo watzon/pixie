@@ -109,7 +109,7 @@ lib LibMagick
   struct ColorPacket
     pixel : PixelPacket
     index : IndexPacket
-    count : MagickSizeType
+    count : LibC::SizeT
   end
 
   struct CustomStreamInfo
@@ -346,7 +346,7 @@ lib LibMagick
     artifacts : Void*  # per image sequence image artifacts
     type : ImageType
     dither : Bool # dithering method during color reduction
-    extent : MagickSizeType
+    extent : LibC::SizeT
     ping : Bool
     channels : LibC::SizeT
     timestamp : LibC::TimeT
@@ -529,13 +529,13 @@ lib LibMagick
     alpha_trait : PixelTrait
     fuzz : LibC::Double
     depth : LibC::SizeT
-    count : MagickSizeType
-    red : MagickRealType
-    green : MagickRealType
-    blue : MagickRealType
-    black : MagickRealType
-    alpha : MagickRealType
-    index : MagickRealType
+    count : LibC::SizeT
+    red : LibC::Double
+    green : LibC::Double
+    blue : LibC::Double
+    black : LibC::Double
+    alpha : LibC::Double
+    index : LibC::Double
   end
 
   struct PixelIterator
@@ -738,7 +738,7 @@ lib LibMagick
   type ErrorHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
   type FatalErrorHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
   type IsImageFormatHandler = LibC::UChar*, LibC::SizeT -> Bool
-  type MagickProgressMonitor = LibC::Char*, MagickOffsetType, MagickSizeType, Void* -> Bool
+  type MagickProgressMonitor = LibC::Char*, MagickOffsetType, LibC::SizeT, Void* -> Bool
   type StreamHandler = Image*, Void*, LibC::SizeT -> LibC::UInt
   type WarningHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
 end

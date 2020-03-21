@@ -4,7 +4,7 @@
 # Description: Combine 2 images
 # ---------------------------------------------------------------------------- #
 
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 LibMagick.magickWandGenesis
 wand1 = LibMagick.newMagickWand

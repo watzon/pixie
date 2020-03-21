@@ -4,7 +4,7 @@
 # Description: Resize image
 # ---------------------------------------------------------------------------- #
 
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 LibMagick.magickWandGenesis
 wand = LibMagick.newMagickWand

@@ -4,7 +4,7 @@
 # Description: Remove an image color
 # ---------------------------------------------------------------------------- #
 
-require "../src/magickwand-crystal"
+require "../src/pixie"
 
 LibMagick.magickWandGenesis
 m_wand = LibMagick.newMagickWand

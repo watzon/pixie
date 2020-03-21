@@ -1,8 +1,8 @@
-# MagickWand for Crystal [![Build Status](https://travis-ci.org/blocknotes/magickwand-crystal.svg?branch=master)](https://travis-ci.org/blocknotes/magickwand-crystal)
+# Pixie
 
-Crystal C bindings for MagickWand library, an interface to use the ImageMagick image processing libraries - see [www.imagemagick.org](https://www.imagemagick.org/script/magick-wand.php)
+Crystal bindings to ImageMagick 7. The goal is to have a full Crystal interface to the MagickWand API.
 
-**NOTE**: Base on _ImageMagick-7.0.8-66_. MagickWand is a quite large library, if you find something missing [contact me](http://www.blocknot.es/me)
+**NOTE**: This is a large undertaking as ImageMagick is a massive library. Contributions are always welcome!
 
 ## Requirements
 
@@ -15,72 +15,50 @@ Crystal C bindings for MagickWand library, an interface to use the ImageMagick i
 
 ```yaml
 dependencies:
-  magickwand-crystal:
-    github: blocknotes/magickwand-crystal
+  pixie:
+    github: watzon/pixie
 ```
 
 ## Usage
 
 Get image info:
 
-```ruby
-require "magickwand-crystal"
-LibMagick.magickWandGenesis    # lib init
-wand = LibMagick.newMagickWand # lib init
-if LibMagick.magickReadImage( wand, "test.png" )
-  puts LibMagick.magickGetImageWidth wand
-  puts LibMagick.magickGetImageHeight wand
-end
-LibMagick.destroyMagickWand wand  # lib deinit
-LibMagick.magickWandTerminus      # lib deinit
+```crystal
+require "pixie"
+
+set = Pixie::ImageSet.new("test.png")
+
+puts set.image_width
+puts set.image_height
 ```
 
-Scale image and save in Jpeg format:
+Scale image and save in JPEG format:
 
-```ruby
-require "magickwand-crystal"
-# ... lib init ...
-LibMagick.magickReadImage wand, "test.png"
-LibMagick.magickScaleImage wand, 320, 240
-LibMagick.magickWriteImage wand, "test2.jpg"
-# ... lib deinit ...
+```crystal
+require "pixie"
+
+set = Pixie::ImageSet.new("test.png")
+set.scale_image(320, 240)
+set.write("test2.jpg")
 ```
 
 Convert to grayscale:
 
-```ruby
-require "magickwand-crystal"
-# ... lib init ...
-LibMagick.magickReadImage wand, "test.jpg"
-LibMagick.magickTransformImageColorspace wand, LibMagick::ColorspaceType::GRAYColorspace
-LibMagick.magickWriteImage wand, "grayscale.jpg"
-# ... lib deinit ...
+```crystal
+require "pixie"
+
+set = Pixie::ImageSet.new("test.png")
+set.transform_image_colorspace(:gray)
+set.write("grayscale.jpg")
 ```
 
 ## More examples
 
-See [examples](https://github.com/blocknotes/magickwand-crystal/tree/master/examples) folder. There is also an example to generate an image on the fly with Kemal.
+See [examples](https://github.com/watzon/pixie/tree/master/examples) folder. There is also an example to generate an image on the fly with Kemal.
 
-## Documentation
-
-The functions mapped have the same names of the MagickWand C library but with the first letter in lowercase.
-
-Example: `MagickWandGenesis` => `LibMagick.magickWandGenesis`
-
-- [MagickWand C Documentation](https://www.imagemagick.org/api/MagickWand/index.html)
-- [MagickWand Examples in C](http://members.shaw.ca/el.supremo/MagickWand/)
-
-## Notes
-
-Branches with different ImageMagick version:
-
-- **im_6.9.7-3**
-- **im_7.0.4-1**
-
-The Crystal Magic Wand ! :)
-
-Sounds funny but I hope you find it a useful piece of software.
+**Note:** This project was forked from [blocknotes/magickwand-crystal](https://github.com/blocknotes/magickwand-crystal) and all of the examples are still using the barebones ImageMagick api. New examples will be coming.
 
 ## Contributors
 
-- [Mattia Roccoberton](http://blocknot.es) - creator, maintainer, Crystal fan :)
+- [watzon](https://github.com/watzon) - creator, maintainer
+- [Mattia Roccoberton](http://blocknot.es) - author of [blocknotes/magickwand-crystal](https://github.com/blocknotes/magickwand-crystal)
