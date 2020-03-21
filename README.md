@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="./assets/pixie-logo-small.png" alt="pixie logo">
+</div>
+
 # Pixie
 
 Crystal bindings to ImageMagick 7. The goal is to have a full Crystal interface to the MagickWand API.
