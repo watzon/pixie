@@ -99,8 +99,9 @@ module Pixie
     end
 
     def image_blob
-      data = LibMagick.magickGetImageBlob(self, pointerof(@size))
-      Bytes.new(data, self.size)
+      size = self.image_bytesize
+      data = LibMagick.magickGetImageBlob(self, pointerof(size))
+      Bytes.new(data, size)
     end
 
     def image_blue_primary
