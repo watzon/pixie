@@ -11,6 +11,3 @@ at_exit do
   LibMagick.magickWandTerminus
 end
 
-image1 = Pixie::ImageSet.new("./matti.jpg")
-image1.filename = "matti.jpg"
-puts image1.filename
