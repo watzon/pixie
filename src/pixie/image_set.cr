@@ -64,7 +64,7 @@ module Pixie
       LibMagick.magickGetIteratorIndex(self).to_i
     end
 
-    def pos=(index : Int32)
+    def pos=(index : Int32 | Int64)
       LibMagick.magickSetIteratorIndex(self, index)
     end
 
@@ -192,7 +192,7 @@ module Pixie
       pw.value
     end
 
-    def image_set_colormap_color(index : Int32, color : Pixel)
+    def image_set_colormap_color(index : Int32 | Int64, color : Pixel)
       LibMagick.magickSetImageColormapColor(self, index, color)
     end
 
@@ -228,7 +228,7 @@ module Pixie
       LibMagick.magickGetImageCompressionQuality(self).to_i
     end
 
-    def image_compression_quality=(quality : Int32)
+    def image_compression_quality=(quality : Int32 | Int64)
       LibMagick.magickSetImageCompressionQuality(self, quality)
     end
 
@@ -236,7 +236,7 @@ module Pixie
       LibMagick.magickGetImageDelay(self).to_i
     end
 
-    def image_delay=(val : Int32)
+    def image_delay=(val : Int32 | Int64)
       LibMagick.magickSetImageDelay(self, val)
     end
 
@@ -244,7 +244,7 @@ module Pixie
       LibMagick.magickGetImageDepth(self).to_i
     end
 
-    def image_depth=(val : Int32)
+    def image_depth=(val : Int32 | Int64)
       LibMagick.magickSetImageDepth(self, val)
     end
 
@@ -274,7 +274,7 @@ module Pixie
       LibMagick.magickSetImageEndian(self, val)
     end
 
-    def image_set_extent(width : Int32, height : Int32)
+    def image_set_extent(width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickSetImageExtent(self, width, height)
     end
 
@@ -355,7 +355,7 @@ module Pixie
       LibMagick.magickGetImageIterations(self).to_i
     end
 
-    def image_iterations=(val : Int32)
+    def image_iterations=(val : Int32 | Int64)
       LibMagick.magickSetImageIterations(self, val)
     end
 
@@ -391,7 +391,7 @@ module Pixie
       {width: width, height: height, x: x, y: y}
     end
 
-    def image_set_page(width : Int32, height : Int32, x : Int32, y : Int32)
+    def image_set_page(width : Int32 | Int64, height : Int32 | Int64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickSetImagePage(self, width, height, x, y)
     end
 
@@ -401,7 +401,7 @@ module Pixie
       pw.value
     end
 
-    def image_set_pixel_color(x : Int32, y : Int32, color : Pixel)
+    def image_set_pixel_color(x : Int32 | Int64, y : Int32 | Int64, color : Pixel)
       LibMagick.magickSetImagePixelColor(self, x, y, color)
     end
 
@@ -436,7 +436,7 @@ module Pixie
       LibMagick.magickGetImageScene(self).to_i
     end
 
-    def image_scen=(scene : Int32)
+    def image_scen=(scene : Int32 | Int64)
       LibMagick.magickSetImageScene(self, scene)
     end
 
@@ -448,7 +448,7 @@ module Pixie
       LibMagick.magickGetImageTicksPerSecond(self).to_i
     end
 
-    def image_ticks_per_second=(val : Int32)
+    def image_ticks_per_second=(val : Int32 | Int64)
       LibMagick.magickSetImageTicksPerSecond(self, val)
     end
 
@@ -566,7 +566,7 @@ module Pixie
       LibMagick.magickLinearStretchImage(self, black_point, white_point)
     end
 
-    def liquid_rescale_image(width : Int32, height : Int32, delta_x : Float64 = 0.0, rigidity : Float64 = 0.0)
+    def liquid_rescale_image(width : Int32 | Int64, height : Int32 | Int64, delta_x : Float64 = 0.0, rigidity : Float64 = 0.0)
       LibMagick.magickLiquidRescaleImage(self, width, height, delta_x, rigidity)
     end
 
@@ -578,7 +578,7 @@ module Pixie
       LibMagick.magickMagnifyImage(self)
     end
 
-    def mean_shift_image(width : Int32, height : Int32, color_distance : Float64)
+    def mean_shift_image(width : Int32 | Int64, height : Int32 | Int64, color_distance : Float64)
       LibMagick.magickMeanShiftImage(self, width, height, color_distance)
     end
 
@@ -598,12 +598,12 @@ module Pixie
       LibMagick.magickMontageImage(self, drawing_wand, geometry, thumb_geometry, mode, frame)
     end
 
-    def morph_images(n_frames : Int32)
+    def morph_images(n_frames : Int32 | Int64)
       wand = LibMagick.magickMorphImages(self, n_frames)
       new(wand)
     end
 
-    def morphology_method_image(method : LibMagick::MorphologyMethod, iterations : Int32, kernel : LibMagick::KernelInfo)
+    def morphology_method_image(method : LibMagick::MorphologyMethod, iterations : Int32 | Int64, kernel : LibMagick::KernelInfo)
       LibMagick.magickMorphologyImage(self, method, iterations, kernel)
     end
 
@@ -615,7 +615,7 @@ module Pixie
       LibMagick.magickNegateImage(self, gray)
     end
 
-    def new_image(columns : Int32, rows : Int32, background : Pixel)
+    def new_image(columns : Int32 | Int64, rows : Int32 | Int64, background : Pixel)
       LibMagick.magickNewImage(columns, rows, background)
     end
 
@@ -655,11 +655,11 @@ module Pixie
       LibMagick.magickPolaroidImage(self, drawing_wand, caption, angle, method)
     end
 
-    def polynomial_image(n_terms : Int32, terms : Float64)
+    def polynomial_image(n_terms : Int32 | Int64, terms : Float64)
       LibMagick.magickPolynomialImage(self, n_terms, terms)
     end
 
-    def posterize_image(levels : Int32, dither_method : LibMagick::DitherMethod = :none)
+    def posterize_image(levels : Int32 | Int64, dither_method : LibMagick::DitherMethod = :none)
       LibMagick.magickPosterizeImage(self, levels, dither_method)
     end
 
@@ -676,11 +676,11 @@ module Pixie
       previous_image
     end
 
-    def quantize_image(n_colors : Int32, colorspace : LibMagick::ColorspaceType, treedepth : Int32, dither_method : LibMagick::DitherMethod = :none, measure_error : Bool = false)
+    def quantize_image(n_colors : Int32 | Int64, colorspace : LibMagick::ColorspaceType, treedepth : Int32 | Int64, dither_method : LibMagick::DitherMethod = :none, measure_error : Bool = false)
       LibMagick.magickQuantizeImage(self, n_colors, colorspace, treedepth, dither_method, measure_error)
     end
 
-    def quantize_all_images(n_colors : Int32, colorspace : LibMagick::ColorspaceType, treedepth : Int32, dither_method : LibMagick::DitherMethod = :none, measure_error : Bool = false)
+    def quantize_all_images(n_colors : Int32 | Int64, colorspace : LibMagick::ColorspaceType, treedepth : Int32 | Int64, dither_method : LibMagick::DitherMethod = :none, measure_error : Bool = false)
       LibMagick.magickQuantizeImages(self, n_colors, colorspace, treedepth, dither_method, measure_error)
     end
 
@@ -702,11 +702,11 @@ module Pixie
       LibMagick.magickRotationalBlurImage(self, angle)
     end
 
-    def raise_image(width : Int32, height : Int32, x : Int32, y : Int32)
+    def raise_image(width : Int32 | Int64, height : Int32 | Int64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickRaiseImage(self, width, height, x, y, true)
     end
 
-    def lower_image(width : Int32, height : Int32, x : Int32, y : Int32)
+    def lower_image(width : Int32 | Int64, height : Int32 | Int64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickRaiseImage(self, width, height, x, y, false)
     end
 
@@ -749,11 +749,11 @@ module Pixie
       LibMagick.magickResetImagePage(self, page)
     end
 
-    def resize_image(width : Int32, height : Int32, filter : LibMagick::FilterType)
+    def resize_image(width : Int32 | Int64, height : Int32 | Int64, filter : LibMagick::FilterType)
       LibMagick.magickResizeImage(self, width, height, filter)
     end
 
-    def roll_image(x : Int32, y : Int32)
+    def roll_image(x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickRollImage(self, x, y)
     end
 
@@ -761,11 +761,11 @@ module Pixie
       LibMagick.magickRotateImage(self, background, degrees)
     end
 
-    def sample_image(width : Int32, height : Int32)
+    def sample_image(width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickSampleImage(self, width, height)
     end
 
-    def scale_image(width : Int32, height : Int32)
+    def scale_image(width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickScaleImage(self, width, height)
     end
 
@@ -793,7 +793,7 @@ module Pixie
       LibMagick.magickShadeImage(self, gray, azimuth, elevation)
     end
 
-    def shadow_image(alpha : Float64, sigma : Float64, x : Int32, y : Int32)
+    def shadow_image(alpha : Float64, sigma : Float64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickShadowImage(self, alpha, sigma, x, y)
     end
 
@@ -801,7 +801,7 @@ module Pixie
       LibMagick.magickSharpenImage(self, radius, sigma)
     end
 
-    def shave_image(width : Int32, height : Int32)
+    def shave_image(width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickShaveImage(self, width, height)
     end
 
@@ -822,7 +822,7 @@ module Pixie
       LibMagick.magickSketchImage(self, radius, sigma, angle)
     end
 
-    def smush_image(offset : Int32, stack : Bool = false)
+    def smush_image(offset : Int32 | Int64, stack : Bool = false)
       LibMagick.magickSmushImages(self, stack, offset)
     end
 
@@ -834,7 +834,7 @@ module Pixie
       LibMagick.magickSparseColorImage(self, args.size, pointerof(args))
     end
 
-    def splice_image(width : Int32, height : Int32, x : Int32, y : Int32)
+    def splice_image(width : Int32 | Int64, height : Int32 | Int64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickSpliceImage(self, width, height, x, y)
     end
 
@@ -842,11 +842,11 @@ module Pixie
       LibMagick.magickSpreadImage(self, method, radius)
     end
 
-    def statistic_image(type : LibMagick::StatisticType, width : Int32, height : Int32)
+    def statistic_image(type : LibMagick::StatisticType, width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickStatisticImage(self, type, width, height)
     end
 
-    def stego_image(watermark : Wand, offset : Int32)
+    def stego_image(watermark : Wand, offset : Int32 | Int64)
       LibMagick.magickSteganoImage(self, watermark, offset)
     end
 
@@ -874,7 +874,7 @@ module Pixie
       LibMagick.magickThresholdImageChannel(self, channel, threshold)
     end
 
-    def thumbnail_image(width : Int32, height : Int32)
+    def thumbnail_image(width : Int32 | Int64, height : Int32 | Int64)
       LibMagick.magickThumbnailImage(self, width, height)
     end
 
@@ -910,7 +910,7 @@ module Pixie
       LibMagick.magickUnsharpMaskImage(self, radius, sigma, gain, threshold)
     end
 
-    def vignette_image(radius : Float64, sigma : Float64, x : Int32, y : Int32)
+    def vignette_image(radius : Float64, sigma : Float64, x : Int32 | Int64, y : Int32 | Int64)
       LibMagick.magickVignetteImage(self, radius, sigma, x, y)
     end
 
