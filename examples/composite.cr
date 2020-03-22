@@ -1,18 +1,9 @@
-# ---------------------------------------------------------------------------- #
-# Example:     composite
-# Author:      Mat
-# Description: Combine 2 images
-# ---------------------------------------------------------------------------- #
-
+# Composite two images together into a single image
 require "../src/pixie"
 
-LibMagick.magickWandGenesis
-wand1 = LibMagick.newMagickWand
-wand2 = LibMagick.newMagickWand
-LibMagick.magickReadImage wand1, "../spec/test2.jpg"
-LibMagick.magickReadImage wand2, "../spec/test3.png"
-LibMagick.magickCompositeImage wand1, wand2, LibMagick::CompositeOperator::OverCompositeOp, false, 50, 50
-LibMagick.magickWriteImage wand1, "output.png"
-LibMagick.destroyMagickWand wand2
-LibMagick.destroyMagickWand wand1
-LibMagick.magickWandTerminus
+set1 = Pixie::ImageSet.new("spec/test2.jpg")
+set2 = Pixie::ImageSet.new("spec/test3.png")
+
+set1.composite_image(set2, :over, false, 50, 50)
+
+puts set1.write_image("output.png")

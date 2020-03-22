@@ -10,4 +10,3 @@ LibMagick.magickWandGenesis
 at_exit do
   LibMagick.magickWandTerminus
 end
-

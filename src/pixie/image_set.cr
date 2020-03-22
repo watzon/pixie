@@ -37,15 +37,32 @@ module Pixie
       end
     end
 
-    def to_u64mage
+    def self.new(width : Int, height : Int, background_color : Pixel)
+      wand = new
+      LibMagick.magickNewImage(wand, width, height, background_color)
+      wand
+    end
+
+    def to_image
       Image.new(LibMagick.getImageFromMagickWand(self))
     end
 
-    def each(&block : Image ->)
+    def each(&block : ImageSet ->)
       start_pos = self.pos
       self.rewind
       loop do
-        yield to_u64mage
+        yield self
+        break unless next_image
+      end
+      self.pos = start_pos
+      nil
+    end
+
+    def each_image(&block : Image ->)
+      start_pos = self.pos
+      self.rewind
+      loop do
+        yield to_image
         break unless next_image
       end
       self.pos = start_pos
@@ -155,6 +172,308 @@ module Pixie
 
     def image_border_color=(color : Pixel)
       LibMagick.magickSetImageBorderColor(self, color)
+    end
+
+    def adaptive_blur_image(radius : Float, sigma : Float)
+      LibMagick.magickAdaptiveBlurImage(self, radius, sigma)
+    end
+
+    def adaptive_resize_image(width : Int, height : Int)
+      LibMagick.magickAdaptiveResizeImage(self, width, height)
+    end
+
+    def adaptive_sharpen_image(radius : Float, sigma : Float)
+      LibMagick.magickAdaptiveSharpenImage(self, radius, sigma)
+    end
+
+    def adaptive_threshold_image(width : Int, height : Int, bias : Float)
+      LibMagick.magickAdaptiveThresholdImage(self, width, height, bias)
+    end
+
+    def add_image(image : ImageSet)
+      LibMagick.magickAddImage(self, image)
+    end
+
+    def add_noise_image(noise_type : LibMagick::NoiseType, attenuate : Float)
+      LibMagick.magickAddNoiseImage(self, noise_type, attenuate)
+    end
+
+    # def affine_transform_image(drawing_wand : DrawingWand)
+    #   LibMagick.magickAffineTransformImage(self, drawing_wand)
+    # end
+
+    # def annotate_image(drawing_wand : DrawingWand, x : Float, y : Float, angle : Float, text : String)
+    #   LibMagick.magickAnnotateImage(self, drawing_wand, x, y, text)
+    # end
+
+    def animate_images(server_name : String = ":0")
+      LibMagick.magickAnimateImages(self, server_name)
+    end
+
+    def append_images(top_to_bottom : Bool = false)
+      LibMagick.magickAppendImages(self, top_to_bottom)
+    end
+
+    def auto_gamma_image
+      LibMagick.magickAutoGammaImage(self)
+    end
+
+    def auto_level_image
+      LibMagick.magickAutoLevelImage(self)
+    end
+
+    def auto_orient_image
+      LibMagick.magickAutoOrientImage(self)
+    end
+
+    def auto_threshold_image(method : LibMagick::AutoThresholdMethod)
+      LibMagick.magickAutoThresholdImage(self, method)
+    end
+
+    def black_threshold_image(threshold : Pixel)
+      LibMagick.magickBlackThresholdImage(self, threshold)
+    end
+
+    def blue_shift_image(factor : Float)
+      LibMagick.magickBlueShiftImage(self, factor)
+    end
+
+    def blur_image(radius : Float, sigma : Float)
+      LibMagick.magickBlurImage(self, radius, sigma)
+    end
+
+    def border_image(border_color : Pixel, width : Int, height : Int, compose : LibMagick::CompositeOperator)
+      LibMagick.magickBorderImage(self, border_color, width, height, compose)
+    end
+
+    def brightness_contrast_image(brightness : Float, contrast : Float)
+      LibMagick.magickBrightnessContrastImage(self, brightness, contrast)
+    end
+
+    def canny_edge_image(radius : Float, sigma : Float, lower_percent : Float, upper_percent : Float)
+      LibMagick.magickCannyEdgeImage(self, radius, sigma, lower_percent, upper_percent)
+    end
+
+    def channel_fx_image(expression : String)
+      LibMagick.magickChannelFxImage(self, expression)
+    end
+
+    def charcoal_image(radius : Float, sigma : Float)
+      LibMagick.magickCharcoalImage(self, radius, sigma)
+    end
+
+    def chop_image(width : Int, height : Int, x : Int, y : Int)
+      LibMagick.magickChopImage(self, width, height, x, y)
+    end
+
+    def clahe_image(width : Int, height : Int, number_bins : Float, clip_limit : Float)
+      LibMagick.magickCLAHEImage(self, width, height, number_bins, clip_limit)
+    end
+
+    def clamp_image
+      LibMagick.magickClampImage(self)
+    end
+
+    def clip_image
+      LibMagick.magickClipImage(self)
+    end
+
+    def clip_image_path(pathname : String, inside : Bool = false)
+      LibMagick.magickClipImagePath(self, pathname, inside)
+    end
+
+    def clut_image(clut : ImageSet, method : LibMagick::PixelInterpolateMethod)
+      LibMagick.magickClutImage(self, clut, method)
+    end
+
+    def coalesce_images
+      LibMagick.magickCoalesceImages(self)
+    end
+
+    def color_correct_image(collection : String)
+      LibMagick.magickColorDecisionListImage(self, collection)
+    end
+
+    def colorize_image(colorize : Pixel, blend : Pixel)
+      LibMagick.magickColorizeImage(self, coloize, blend)
+    end
+
+    def color_matrix_image(matrix : LibMagick::KernelInfo)
+      LibMagick.magickColorMatrixImage(sel, matrix)
+    end
+
+    def combine_images(colorspace : LibMagick::ColorspaceType)
+      LibMagick.magickCombineImages(self, colorspace)
+    end
+
+    def comment_image(comment : String)
+      LibMagick.magickCommentImage(self, comment)
+    end
+
+    def compare_image_layers(method : LibMagick::LayerMethod)
+      wand = LibMagick.magickCompareImagesLayers(self, method)
+      new(wand)
+    end
+
+    def compare_images(reference : Image, metric : LibMagick::MetricType, distortion : Float)
+      LibMagick.magickCompareImages(self, reference, metric, distortion)
+    end
+
+    def complex_images(op : LibMagick::ComplexOperator)
+      LibMagick.magickComplexImages(self, op)
+    end
+
+    def composite_image(source : ImageSet, opetator : LibMagick::CompositeOperator, clip_to_self : Bool, x : Int, y : Int)
+      LibMagick.magickCompositeImage(self, source, opetator, clip_to_self, x, y)
+    end
+
+    def composite_image(source : ImageSet, compose : LibMagick::CompositeOperator, gravity : LibMagick::GravityType)
+      LibMagick.magickCompositeImageGravity(self, source, compose, gravity)
+    end
+
+    def composite_layers(source : ImageSet, compose : LibMagick::CompositeOperator, x : Int, y : Int)
+      LibMagick.magickCompositeLayers(self, source, compose, x, y)
+    end
+
+    def connected_components_image(connectivity : Int)
+      LibMagick.magickConnectedComponentsImage(self, connectivity, out objects)
+      Array(LibMagick::CCObjectInfo).new(connectivity) do |i|
+        objects[i]
+      end
+    end
+
+    def contrast_image(increase : Bool)
+      LibMagick.magickContrastImage(self, increase)
+    end
+
+    def contrast_stretch(black_point : Float, white_point : Float)
+      LibMagick.magickContrastStretchImage(self, black_point, white_point)
+    end
+
+    def convolve_image(kernel : LibMagick::KernelInfo)
+      LibMagick.magickConvolveImage(self, kernel)
+    end
+
+    def crop_image(width : Int, height : Int, x : Int, y : Int)
+      LibMagick.magickCropImage(self, width, height, x, y)
+    end
+
+    def cycle_colormap_image(displace : Int)
+      LibMagick.magickCycleColormapImage(self, displace)
+    end
+
+    def constitute_image(columns : Int, rows : Int, map : String, storage : LibMagick::StorageType, pixels : Array(Pixel))
+      LibMagick.magickConstituteImage(self, columns, rows, map, storage, pixels.map(&.to_unsafe))
+    end
+
+    def decipher_image(passphrase : String)
+      LibMagick.magickDecipherImage(self, passphrase)
+    end
+
+    def deconstruct_images
+      wand = LibMagick.magickDeconstructImages(self)
+      new(wand)
+    end
+
+    def deskew_image(threshold : Float)
+      LibMagick.magickDeskewImage(self, threshold)
+    end
+
+    def despeckle_image
+      LibMagick.magickDespeckleImage(self)
+    end
+
+    def display_image(x_server : String = ":0")
+      LibMagick.magickDisplayImage(self, x_server)
+    end
+
+    def display_images(x_server : String = ":0")
+      LibMagick.magickDisplayImages(self, x_server)
+    end
+
+    def distort_image(method : LibMagick::DistortMethod, best_fit : Bool, *args)
+      LibMagick.magickDistortImage(self, method, args.size, args, best_fit)
+    end
+
+    # def draw_image(drawing_wand : DrawingWand)
+    #   LibMagick.magickDrawImage(self, drawing_wand)
+    # end
+
+    def edge_image(radius : Float)
+      LibMagick.magickEdgeImage(self, radius)
+    end
+
+    def emboss_image(radius : Float, sigma : Float)
+      LibMagick.magickEmbossImage(self, radius, sigma)
+    end
+
+    def encipher_image(passphrase : String)
+      LibMagick.magickEncipherImage(self, passphrase)
+    end
+
+    def enhance_image
+      LibMagick.magickEnhanceImage(self)
+    end
+
+    def equalize_image
+      LibMagick.magickEqualizeImage(self)
+    end
+
+    def evaluate_image(operator : LibMagick::MagickEvaluateOperator, value : Float)
+      LibMagick.magickEvaluateImage(self, operator, value)
+    end
+
+    def evaluate_images(operator : LibMagick::MagickEvaluateOperator)
+      wand = LibMagick.magickEvaluateImages(self, operator)
+      new(wand)
+    end
+
+    # TODO: Figure this out
+    # def image_pixels(x : Int, y : Int, columns : Int, rows : Int, map : String, storage : LibMagick::StorageType)
+    #   arr = Array(UInt8).new(columns * rows * map.size) { 0u8 }
+    #   output = Box.box(arr.to_unsafe)
+    #   LibMagick.magickExportImagePixels(self, x, y, columns, rows, map, storage, output)
+    #   # Box(Array(UInt8)).unbox(output)
+    # end
+
+    def extent_image(width : Int, height : Int, x : Int, y : Int)
+      LibMagick.magickExtentImage(self, width, height, x, y)
+    end
+
+    def flip_image
+      LibMagick.magickFlipImage(self)
+    end
+
+    def flood_fill_paint_image(fill : Pixel, fuzz : Float, border_color : Pixel, x : Int, y : Int, invert : Bool = false)
+      LibMagick.magickFloodfillPaintImage(self, fill, fuzz, border_color, x, y, invert)
+    end
+
+    def flop_image
+      LibMagick.magickFlopImage(self)
+    end
+
+    def forward_fourier_transform_image(magnitude : Float)
+      LibMagick.magickForwardFourierTransformImage(self, magnitude)
+    end
+
+    def frame_image(matte_color : Pixel, width : Int, height : Int, inner_bevel : Int, outer_bevel : Int, compose : LibMagick::CompositeOperator)
+      LibMagick.magickFrameImage(self, matte_color, width, height, inner_bevel, outer_bevel, operator)
+    end
+
+    def function_image(function : LibMagick::MagickFunction, *args)
+      LibMagick.magickFunctionImage(self, function, args.size, args)
+    end
+
+    def fx_image(expression : String)
+      LibMagick.magickFxImage(self, expression)
+    end
+
+    def gamma_image(gamma : Float)
+      LibMagick.magickGammaImage(self, gamma)
+    end
+
+    def gaussian_blur_image(radius : Float, sigma : Float)
+      LibMagick.magickGaussianBlurImage(self, radius, sigma)
     end
 
     def image_features(distance)
@@ -410,7 +729,7 @@ module Pixie
       LibMagick.magickSetImageProgressMonitor(self, block.pointer, client_data)
     end
 
-    def image_crop(width, height, x, y)
+    def get_image_region(width, height, x, y)
       wand = LibMagick.magickGetImageRegion(self, width, height, x, y)
       new(wand)
     end
