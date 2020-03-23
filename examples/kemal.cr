@@ -7,21 +7,21 @@
 require "kemal"
 require "../src/pixie"
 
+def random_color
+  String.build(7) do |str|
+    str << '#' << Random.new.hex(3)
+  end
+end
+
 get "/" do |env|
   env.response.content_type = "image/jpeg"
-  LibMagick.magickWandGenesis
-  wand = LibMagick.newMagickWand
-  p_wand = LibMagick.newPixelWand
-  LibMagick.pixelSetColor p_wand, "orange"
-  LibMagick.magickNewImage wand, 640, 480, p_wand
-  LibMagick.magickSetImageFormat wand, "JPEG"
-  buffer = LibMagick.magickGetImageBlob wand, out length
-  slice = Slice(UInt8).new(buffer, length)
-  LibMagick.destroyPixelWand p_wand
-  LibMagick.destroyMagickWand wand
-  LibMagick.magickWandTerminus
+
+  pixel = Pixie::Pixel.from_hex(random_color)
+  set = Pixie::ImageSet.new(640, 480, pixel)
+  set.image_format = "JPEG"
+  buffer = set.image_blob
   io = IO::Memory.new
-  io.write slice
+  io.write buffer
   io.to_s
 end
 

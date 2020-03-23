@@ -6,30 +6,26 @@
 
 require "../src/pixie"
 
-LibMagick.magickWandGenesis
-wand = LibMagick.newMagickWand
-if LibMagick.magickReadImage(wand, "../spec/test1.png")
-  # char* functions
-  STDOUT << "- MagickGetImageFilename: " << String.new(LibMagick.magickGetImageFilename(wand)) << "\n"
-  STDOUT << "- MagickGetImageFormat: " << String.new(LibMagick.magickGetImageFormat(wand)) << "\n"
-  STDOUT << "- MagickGetImageSignature: " << String.new(LibMagick.magickGetImageSignature(wand)) << "\n"
-  STDOUT << "- MagickIdentifyImage:\n" << String.new(LibMagick.magickIdentifyImage(wand)) << "\n"
-  # int functions
-  STDOUT << "- GetImageWidth: " << LibMagick.magickGetImageWidth(wand) << "\n"
-  STDOUT << "- GetImageHeight: " << LibMagick.magickGetImageHeight(wand) << "\n"
-  STDOUT << "- GetImageColors: " << LibMagick.magickGetImageColors(wand) << "\n"
-  STDOUT << "- GetImageCompressionQuality: " << LibMagick.magickGetImageCompressionQuality(wand) << "\n"
-  STDOUT << "- GetImageDelay: " << LibMagick.magickGetImageDelay(wand) << "\n"
-  STDOUT << "- GetImageDepth: " << LibMagick.magickGetImageDepth(wand) << "\n"
-  STDOUT << "- GetImageIterations: " << LibMagick.magickGetImageIterations(wand) << "\n"
-  STDOUT << "- GetImageScene: " << LibMagick.magickGetImageScene(wand) << "\n"
-  STDOUT << "- GetImageTicksPerSecond: " << LibMagick.magickGetImageTicksPerSecond(wand) << "\n"
-  STDOUT << "- GetNumberImages: " << LibMagick.magickGetNumberImages(wand) << "\n"
-  STDOUT << "\n"
-  # enum functions
-  STDOUT << "- GetImageCompression: " << LibMagick.magickGetImageCompression(wand) << "\n"
-  STDOUT << "- GetImageType: " << LibMagick.magickGetImageType(wand) << "\n"
-  STDOUT << "\n"
-end
-LibMagick.destroyMagickWand wand
-LibMagick.magickWandTerminus
+set = Pixie::ImageSet.new("../spec/test1.png")
+# char* functions
+puts "- MagickGetImageFilename: " + set.image_filename
+puts "- MagickGetImageFormat: " + set.image_format
+puts "- MagickGetImageSignature: " + set.image_signature
+puts "- MagickIdentifyImage:\n" + set.identify_image
+puts
+# int functions
+puts "- GetImageWidth: " + set.image_width.to_s
+puts "- GetImageHeight: " + set.image_height.to_s
+puts "- GetImageColors: " + set.image_colors.to_s
+puts "- GetImageCompressionQuality: " + set.image_compression_quality.to_s
+puts "- GetImageDelay: " + set.image_delay.to_s
+puts "- GetImageDepth: " + set.image_depth.to_s
+puts "- GetImageIterations: " + set.image_iterations.to_s
+puts "- GetImageScene: " + set.image_scene.to_s
+puts "- GetImageTicksPerSecond: " + set.image_ticks_per_second.to_s
+puts "- GetNumberImages: " + set.n_images.to_s
+puts
+# enum functions
+puts "- GetImageCompression: " + set.image_compression.to_s
+puts "- GetImageType: " + set.image_type.to_s
+puts

@@ -6,15 +6,8 @@
 
 require "../src/pixie"
 
-LibMagick.magickWandGenesis
-m_wand = LibMagick.newMagickWand
-p_wand = LibMagick.newPixelWand
-if LibMagick.magickReadImage(m_wand, "../spec/test1.png")
-  LibMagick.pixelSetColor p_wand, "magenta"
-  LibMagick.magickSetImageBackgroundColor m_wand, p_wand
-  LibMagick.magickExtentImage m_wand, 840, 680, -100, -100
-  LibMagick.magickWriteImage m_wand, "output.png"
-end
-LibMagick.destroyPixelWand p_wand
-LibMagick.destroyMagickWand m_wand
-LibMagick.magickWandTerminus
+set = Pixie::ImageSet.new("../spec/test1.png")
+pixel = Pixie::Pixel.parse("magenta")
+set.image_background_color = pixel
+set.extent_image(840, 680, -100, -100)
+set.write_image("output.png")

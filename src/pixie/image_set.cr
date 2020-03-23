@@ -23,17 +23,25 @@ module Pixie
 
       case input
       when String
-        LibMagick.magickReadImage(@wand, input)
+        unless LibMagick.magickReadImage(@wand, input)
+          raise "Failed to read image from '#{input}'"
+        end
       when File
         @path = input.path
         fd = LibC.fdopen(input.fd, input.mode)
-        LibMagick.magickReadImageFile(@wand, fd)
+        unless LibMagick.magickReadImageFile(@wand, fd)
+          raise "Failed to read image from the given file"
+        end
       when IO
         str = input.gets_to_end
         bytes = str.to_slice
-        LibMagick.magickReadImageBlob(@wand, bytes.to_unsafe, bytes.size)
+        unless LibMagick.magickReadImageBlob(@wand, bytes.to_unsafe, bytes.size)
+          raise "Failed to read image from IO"
+        end
       else # Bytes
-        LibMagick.magickReadImageBlob(@wand, input.to_unsafe, input.size)
+        unless LibMagick.magickReadImageBlob(@wand, input.to_unsafe, input.size)
+          raise "Failed to read image from slice"
+        end
       end
     end
 
@@ -515,7 +523,7 @@ module Pixie
       LibMagick.magickSetImageColormapColor(self, index, color)
     end
 
-    def image_n_unique_colors
+    def image_colors
       LibMagick.magickGetImageColors(self).to_u64
     end
 
@@ -829,7 +837,7 @@ module Pixie
       LibMagick.magickHoughLineImage(self, width, height, threshold)
     end
 
-    def image_identify
+    def identify_image
       String.new(LibMagick.magickIdentifyImage(self))
     end
 
