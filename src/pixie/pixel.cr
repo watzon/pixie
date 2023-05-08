@@ -1,6 +1,20 @@
 module Pixie
   class Pixel
     COLOR_HEX_REGEX = /^#([A-Fa-f0-9]{9}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+    BLACK = Pixel.from_rgb(0, 0, 0)
+    WHITE = Pixel.from_rgb(255, 255, 255)
+    TRANSPARENT = Pixel.from_rgb(0, 0, 0, 0)
+    RED = Pixel.from_rgb(255, 0, 0)
+    GREEN = Pixel.from_rgb(0, 255, 0)
+    BLUE = Pixel.from_rgb(0, 0, 255)
+    YELLOW = Pixel.from_rgb(255, 255, 0)
+    CYAN = Pixel.from_rgb(0, 255, 255)
+    MAGENTA = Pixel.from_rgb(255, 0, 255)
+    ORANGE = Pixel.from_rgb(255, 165, 0)
+    PURPLE = Pixel.from_rgb(128, 0, 128)
+    PINK = Pixel.from_rgb(255, 192, 203)
+    BROWN = Pixel.from_rgb(165, 42, 42)
+    GRAY = Pixel.from_rgb(128, 128, 128)
 
     def initialize(@pixel_wand : LibMagick::PixelWand*)
     end
@@ -27,6 +41,14 @@ module Pixie
 
     def self.from_cmyk(cyan : Int, magenta : Int, yellow : Int, key : Int)
       self.parse("cmyk(#{cyan}, #{magenta}, #{yellow}, #{key})")
+    end
+
+    def ==(other : Pixel)
+      self.info == other.info
+    end
+
+    def <=>(other : Pixel)
+      self.info <=> other.info
     end
 
     def alpha
@@ -227,6 +249,20 @@ module Pixie
     def clone
       wand = LibMagick.clonePixelWand(self)
       new(wand)
+    end
+
+    def info
+      LibMagick.pixelGetPixel(self)
+    end
+
+    def to_s
+      info = self.info
+      "Pixel(#{info.red}, #{info.green}, #{info.blue}, #{info.alpha})"
+    end
+
+    def inspect
+      info = self.info
+      "Pixel(alpha: #{info.alpha}, alpha_trait: #{info.alpha_trait}, black: #{info.black}, blue: #{info.blue}, colorspace: #{info.colorspace}, count: #{info.count}, depth: #{info.depth}, fuzz: #{info.fuzz}, green: #{info.green}, index: #{info.index}, red: #{info.red}, storage_class: #{info.storage_class})"
     end
 
     def to_unsafe

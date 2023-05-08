@@ -1,13 +1,13 @@
 # ---------------------------------------------------------------------------- #
-# Example:     floodfill
-# Author:      Mat
-# Description: Remove an image color
+# Example:     flood_fill
+# Author:      watzon
+# Description: Flood fill an image with a color, or in this case transparency.
 # ---------------------------------------------------------------------------- #
 
 require "../src/pixie"
 
-set = Pixie::ImageSet.new("../spec/test3.png")
-fc = Pixie::Pixel.parse("none")
-bc = Pixie::Pixel.parse("red")
-set.flood_fill_paint_image(fc, 20.0, bc, 150, 150, false)
-set.write_image("output.png")
+set = Pixie::Image.new("spec/fixtures/colors.png")
+fc = Pixie::Pixel::TRANSPARENT
+bc = Pixie::Pixel::RED
+set.flood_fill_paint(fc, 20.0, bc, 150, 150, false)
+set.write("output.png")

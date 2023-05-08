@@ -1,14 +1,16 @@
 # ---------------------------------------------------------------------------- #
 # Example:     morphology
-# Description: Morph of an image
+# Author:      watzon
+# Description: Use morphology to apply a kernel to an image
 # ---------------------------------------------------------------------------- #
 
 require "../src/pixie"
 
-set = Pixie::ImageSet.new("../spec/test2.png")
-LibMagick.magickSetImageArtifact set, "convolve:bias", "50%"
+img = Pixie::Image.new("spec/fixtures/default.jpg")
 gi = LibMagick::GeometryInfo.new
 ei = LibMagick.acquireExceptionInfo
-ki = LibMagick.acquireKernelBuiltIn LibMagick::KernelInfoType::SobelKernel, pointerof(gi), ei
-LibMagick.magickMorphologyImage set, LibMagick::MorphologyMethod::ConvolveMorphology, 1, ki
-LibMagick.magickWriteImage set, "output.jpg"
+ki = LibMagick.acquireKernelBuiltIn LibMagick::KernelInfoType::Sobel, pointerof(gi), ei
+
+img.set_artifact("convolve:bias", "50%")
+img.morphology_method(:convolve, 1, ki)
+img.write("output.jpg")

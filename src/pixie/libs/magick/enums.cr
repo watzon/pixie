@@ -861,14 +861,14 @@ lib LibMagick
   end
 
   enum NoiseType
-    UndefinedNoise
-    UniformNoise
-    GaussianNoise
-    MultiplicativeGaussianNoise
-    ImpulseNoise
-    LaplacianNoise
-    PoissonNoise
-    RandomNoise
+    Undefined
+    Uniform
+    Gaussian
+    MultiplicativeGaussian
+    Impulse
+    Laplacian
+    Poisson
+    Random
   end
 
   enum OrientationType

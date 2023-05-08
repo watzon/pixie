@@ -1,31 +1,31 @@
 # ---------------------------------------------------------------------------- #
 # Example:     info
-# Author:      Mat
-# Description: Get info from an image
+# Author:      watzon
+# Description: Displays information about an image.
 # ---------------------------------------------------------------------------- #
 
 require "../src/pixie"
 
-set = Pixie::ImageSet.new("../spec/test1.png")
+img = Pixie::Image.new("spec/fixtures/animation.gif")
 # char* functions
-puts "- MagickGetImageFilename: " + set.image_filename
-puts "- MagickGetImageFormat: " + set.image_format
-puts "- MagickGetImageSignature: " + set.image_signature
-puts "- MagickIdentifyImage:\n" + set.identify_image
+puts "- MagickGetImageFilename: " + img.filename
+puts "- MagickGetImageFormat: " + img.format
+puts "- MagickGetImageSignature: " + img.signature
+puts "- MagickIdentifyImage:\n" + img.identify
 puts
 # int functions
-puts "- GetImageWidth: " + set.image_width.to_s
-puts "- GetImageHeight: " + set.image_height.to_s
-puts "- GetImageColors: " + set.image_colors.to_s
-puts "- GetImageCompressionQuality: " + set.image_compression_quality.to_s
-puts "- GetImageDelay: " + set.image_delay.to_s
-puts "- GetImageDepth: " + set.image_depth.to_s
-puts "- GetImageIterations: " + set.image_iterations.to_s
-puts "- GetImageScene: " + set.image_scene.to_s
-puts "- GetImageTicksPerSecond: " + set.image_ticks_per_second.to_s
-puts "- GetNumberImages: " + set.n_images.to_s
+puts "- GetImageWidth: " + img.width.to_s
+puts "- GetImageHeight: " + img.height.to_s
+puts "- GetImageColors: " + img.colors.to_s
+puts "- GetImageCompressionQuality: " + img.compression_quality.to_s
+puts "- GetImageDelay: " + img.delay.to_s
+puts "- GetImageDepth: " + img.depth.to_s
+puts "- GetImageIterations: " + img.iterations.to_s
+puts "- GetImageScene: " + img.scene.to_s
+puts "- GetImageTicksPerSecond: " + img.ticks_per_second.to_s
+puts "- GetNumberImages: " + img.size.to_s
 puts
 # enum functions
-puts "- GetImageCompression: " + set.image_compression.to_s
-puts "- GetImageType: " + set.image_type.to_s
+puts "- GetImageCompression: " + img.compression.to_s
+puts "- GetImageType: " + img.type.to_s
 puts

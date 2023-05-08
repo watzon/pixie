@@ -1,27 +1,21 @@
 # ---------------------------------------------------------------------------- #
 # Example:     text
-# Author:      Mat
-# Description: Text image
+# Author:      watzon
+# Description: Draw text on an image
 # ---------------------------------------------------------------------------- #
 
 require "../src/pixie"
 
-LibMagick.magickWandGenesis
-m_wand = LibMagick.newMagickWand
-d_wand = LibMagick.newDrawingWand
-p_wand = LibMagick.newPixelWand
-if LibMagick.magickReadImage(m_wand, "../spec/test1.png")
-  LibMagick.pixelSetColor p_wand, "white"
-  LibMagick.drawSetFillColor d_wand, p_wand
-  LibMagick.drawSetFont d_wand, "Verdana-Bold-Italic"
-  LibMagick.drawSetFontSize d_wand, 40
-  LibMagick.drawSetTextAntialias d_wand, true
-  LibMagick.drawAnnotation d_wand, 25, 65, "It's Magick"
-  LibMagick.magickDrawImage m_wand, d_wand
-  LibMagick.magickTrimImage m_wand, 0
-  LibMagick.magickWriteImage m_wand, "output.png"
-end
-LibMagick.destroyPixelWand p_wand
-LibMagick.destroyDrawingWand d_wand
-LibMagick.destroyMagickWand m_wand
-LibMagick.magickWandTerminus
+img = Pixie::Image.new("spec/fixtures/default.jpg")
+Brush = Pixie::Brush.new
+pixel = Pixie::Pixel::WHITE
+
+Brush.set_fill_color(pixel)
+Brush.set_font("Verdana-Bold-Italic")
+Brush.set_font_size(40)
+Brush.set_text_antialias(true)
+Brush.annotation(5, 65, "It's Magick")
+
+img.draw(Brush)
+img.trim(0.0)
+img.write("output.png")

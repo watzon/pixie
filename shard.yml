@@ -1,9 +1,14 @@
 name: pixie
-version: 0.1.0
+version: 0.2.0
 
 authors:
   - Chris Watson <cawatson1993@gmaiil.com>
 
-crystal: 0.33.0
+crystal: ">= 0.33.0, < 2.0"
 
 license: MIT
+
+development_dependencies:
+  spectator:
+    gitlab: arctic-fox/spectator
+    version: ~> 0.11.0

@@ -1,26 +1,25 @@
 # ---------------------------------------------------------------------------- #
 # Example:     tilt_shift
-# Author:      Mat
-# Description: Tilt shift image
+# Author:      watzon
+# Description: Use sparse_color to create a tilt-shift effect
 # ---------------------------------------------------------------------------- #
 
 require "../src/pixie"
 
-LibMagick.magickWandGenesis
 arglist = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 1.0, 1.0, 1.0]
 funclist = [4.0, -4.0, 1.0]
-mw = LibMagick.newMagickWand
-if LibMagick.magickReadImage(mw, "../spec/test2.jpg")
-  arglist[6] = Float64.new(LibMagick.magickGetImageHeight(mw) - 1)
-  LibMagick.magickSigmoidalContrastImage mw, true, 15, LibMagick::QuantumRange * 0.4
-  cw = LibMagick.cloneMagickWand mw
-  LibMagick.magickSparseColorImage cw, LibMagick::SparseColorMethod::BarycentricColorInterpolate, 10, arglist
-  LibMagick.magickFunctionImage cw, LibMagick::MagickFunction::PolynomialFunction, 3, funclist
-  if LibMagick.magickSetImageArtifact(cw, "compose:args", "15")
-    LibMagick.magickCompositeImage mw, cw, LibMagick::CompositeOperator::BlurCompositeOp, false, 0, 0
-    LibMagick.magickWriteImage mw, "output.jpg"
-  end
-  LibMagick.destroyMagickWand cw
+
+img = Pixie::Image.new("spec/fixtures/engine.png")
+arglist[6] = Float64.new(img.height - 1)
+
+img.sigmoidal_constrast(15, LibMagick::QuantumRange * 0.4, sharpen: true)
+comp = img.clone
+
+comp.sparse_color(:barycentric, arglist)
+comp.function(:polynomial, funclist)
+if comp.set_artifact("compose:args", "15")
+  img.composite(comp, :blur, false, 0, 0)
+  img.write("output.jpg")
 end
-LibMagick.destroyMagickWand mw
-LibMagick.magickWandTerminus
+
+

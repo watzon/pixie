@@ -1,9 +1,14 @@
-# Composite two images together into a single image
+# ---------------------------------------------------------------------------- #
+# Example:     composite
+# Author:      watzon
+# Description: Composite two images together
+# ---------------------------------------------------------------------------- #
+
 require "../src/pixie"
 
-set1 = Pixie::ImageSet.new("spec/test2.jpg")
-set2 = Pixie::ImageSet.new("spec/test3.png")
+img1 = Pixie::Image.new("spec/fixtures/default.jpg")
+img2 = Pixie::Image.new("spec/fixtures/engine.png")
 
-set1.composite_image(set2, :over, false, 50, 50)
+img1.composite(img2, :over, false, 50, 50)
 
-puts set1.write_image("output.png")
+img1.write("output.png")
