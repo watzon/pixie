@@ -217,6 +217,17 @@ module Pixie
     end
 
     ##
+    # Return exif data for the image as a `Hash(String, String)`.
+    #
+    def exif
+      self["%[EXIF:*]"].strip.split("\n").map do |line|
+        key, value = line.split("=", 2)
+        key = key.sub("exif:", "")
+        [key, value]
+      end.to_h
+    end
+
+    ##
     # Returns true if the image has an alpha channel.
     #
     def has_alpha?
@@ -1265,7 +1276,7 @@ module Pixie
 
     def resolution
       LibMagick.magickGetImageResolution(self, out x, out y)
-      {x: x, y: y}
+      {x, y}
     end
 
     def set_resolution(x : Float64, y : Float64)
