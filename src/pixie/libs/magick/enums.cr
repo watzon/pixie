@@ -828,10 +828,10 @@ lib LibMagick
   end
 
   enum MontageMode
-    UndefinedMode
-    FrameMode
-    UnframeMode
-    ConcatenateMode
+    Undefined
+    Frame
+    Unframe
+    Concatenate
   end
 
   enum MorphologyMethod

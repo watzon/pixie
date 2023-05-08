@@ -24,7 +24,7 @@ module Pixie::Helpers
     output
   end
 
-  private def assert_no_exception(exception_info : LibMagick::ExceptionInfo)
+  def self.assert_no_exception(exception_info : LibMagick::ExceptionInfo)
     if exception_info.severity != LibMagick::ExceptionType::UndefinedException
       raise "Failed to interpret image properties: #{exception_info.reason}"
     end

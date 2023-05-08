@@ -32,11 +32,23 @@ module Pixie
     # Creates a new `Image` from the given stream. See `Image#read` for
     # more information.
     #
-    def initialize(input : String | Bytes | File | IO)
+    def initialize(input : String | Bytes | IO)
       @wand = LibMagick.newMagickWand
       unless self.read(input)
         raise ReadError.new("Unable to read image from input")
       end
+    end
+
+    ##
+    # Creates a new `Image` from the given Array, where each element is
+    # a layer in the image.
+    #
+    def self.new(images : Array(String) | Array(Bytes) | Array(IO))
+      img = Image.new
+      images.each do |image|
+        img.read(image)
+      end
+      img
     end
 
     ##
@@ -113,7 +125,7 @@ module Pixie
       exception_info = LibMagick.acquireExceptionInfo
 
       raw = LibMagick.interpretImageProperties(image_info, self.to_unsafe_image, format, exception_info)
-      assert_no_exception(exception_info.value)
+      Helpers.assert_no_exception(exception_info.value)
 
       LibMagick.destroyExceptionInfo(exception_info)
       LibMagick.destroyImageInfo(image_info)
@@ -1434,72 +1446,37 @@ module Pixie
     end
 
     ##
-    # Create a montage from the images in the current set. The options are as follows:
+    # Create a montage from the images in the current set.
     #
-    # - `geometry`: A string describing the size and offsets for each individual image tile in the grid. In the format "WidthxHeight+XOffset+YOffset" (e.g., "200x200+5+5").
-    # - `tile`: A string specifying how many rows and columns the grid should have. It follows the "ColumnsxRows" format (e.g., "2x2").
-    # - `title`: A string representing the title for the montage. This title is displayed above the montage.
-    # - `frame`: A string describing the frame geometry for the tiles. The format is outerBevelWidthxinnerBevelWidth"+width+height (e.g., "6x6+10+10").
-    # - `texture`: The file path of an image used to texture the background of the montage grid.
-    # - `font`: A string setting the font to be used for any text (like the title) in the montage.
-    # - `pointsize`: A double value specifying the point size of the text (like the title) in the montage.
-    # - `border_width`: A size_t value determining the width of the border around the image tiles in the grid.
-    # - `shadow`: A boolean value (true or false) specifying whether to apply a shadow effect to each image tile in the grid.
-    # - `alpha_color`: A `Pixe::Pixel` defining the alpha color setting for the montage.
-    # - `background_color`: A `Pixe::Pixel` specifying the background color for the montage.
-    # - `border_color`: A `Pixe::Pixel` setting the color for the image tile borders in the grid.
-    # - `fill`: A `Pixe::Pixel` defining the fill color for the montage.
-    # - `stroke`: A `Pixe::Pixel` specifying the stroke color for the montage.
-    # - `gravity`: A GravityType enumeration value setting the gravity position for the montage images.
-    # - `debug`: A character value enabling or disabling debugging output.
-    # - `matte_color`: A `Pixe::Pixel` defining the matte color for the montage.
-    def montage(
-      geometry : String? = nil,
-      tile : String? = nil,
-      title : String? = nil,
-      frame : String? = nil,
-      texture : String? = nil,
-      font : String? = nil,
-      pointsize : Float64 = 0.0,
-      border_width : Int = 0,
-      shadow : Bool = false,
-      alpha_color : Pixel? = nil,
-      background_color : Pixel? = nil,
-      border_color : Pixel? = nil,
-      fill : Pixel? = nil,
-      stroke : Pixel? = nil,
-      gravity : LibMagick::GravityType = :forget,
-      debug : Bool = false,
-      matte_color : Pixel? = nil
-    )
-      image_info = LibMagick.cloneImageInfo(Pointer(LibMagick::ImageInfo).null)
-      montage_info = LibMagick.cloneMontageInfo(image_info, Pointer(LibMagick::MontageInfo).null)
+    def montage(thumbnail_geometry : String? = nil, tile_geometry : String? = nil, brush : Brush = Brush.new, mode : LibMagick::MontageMode = :undefined, frame : String? = nil)
+      old_pos = self.pos
+      self.rewind
 
-      montage_info.value.geometry = geometry if geometry
-      montage_info.value.tile = tile if tile
-      montage_info.value.title = title if title
-      montage_info.value.frame = frame if frame
-      montage_info.value.texture = texture if texture
-      montage_info.value.font = font if font
-      montage_info.value.pointsize = pointsize
-      montage_info.value.border_width = border_width
-      montage_info.value.shadow = shadow
-      montage_info.value.alpha_color = alpha_color.info if alpha_color
-      montage_info.value.background_color = background_color.info if background_color
-      montage_info.value.border_color = border_color.info if border_color
-      montage_info.value.fill = fill.info if fill
-      montage_info.value.stroke = stroke.info if stroke
-      montage_info.value.gravity = gravity
-      montage_info.value.debug = debug ? 1 : 0
-      montage_info.value.matte_color = matte_color if matte_color
+      if !tile_geometry
+        # Create a default geometry based on the nmber of images in the wand.
+        n = self.size
+        cols = Math.sqrt(n).ceil
+        rows = (n / cols.to_f).ceil
+        tile_geometry = "#{cols}x#{rows}+0+0"
+      end
 
-      exception_info = LibMagick.acquireExceptionInfo
-      wand = LibMagick.montageImages(self.to_unsafe_image, montage_info, exception_info)
-      assert_no_exception(exception_info.value)
+      if !thumbnail_geometry
+        # Create a default geometry based on the nmber of images in the wand.
+        n = self.size
+        width = self.width
+        height = self.height
+        cols = Math.sqrt(n).ceil
+        rows = (n / cols.to_f).ceil
+        tile_width = (width / cols.to_f).ceil
+        tile_height = (height / rows.to_f).ceil
+        thumbnail_geometry = "#{tile_width}x#{tile_height}+0+0"
+      end
 
-      LibMagick.destroyImageInfo(image_info)
-      LibMagick.destroyExceptionInfo(exception_info)
+      frame ||= "0x0+0+0"
 
+      wand = LibMagick.magickMontageImage(self, brush, tile_geometry, thumbnail_geometry, mode, frame)
+
+      self.set_pos(old_pos)
       Image.new(wand)
     end
 

@@ -127,6 +127,25 @@ image.layers # => [Pixie::Image, Pixie::Image, Pixie::Image]
 
 This works with GIFs, PDFs, PSDs, and other formats that support layers.
 
+### Montages
+
+Montages are a special type of image that is a collection of images arranged in a grid. You can create a montage from a collection of images.
+
+```crystal
+image = Pixie::Image.new([
+  "./image1.jpg",
+  "./image2.jpg",
+  "./image3.jpg",
+  "./image4.jpg",
+])
+
+width = image.width
+height = image.height
+
+montage = image.montage("#{width}x#{height}+10+10")
+montage.write("output.png")
+```
+
 ## More examples
 
 See the [examples](./examples) folder for several interesting examples of what you can do with Pixie. Included are:
