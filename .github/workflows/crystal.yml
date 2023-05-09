@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     container:
@@ -16,7 +15,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install dependencies
+    - name: Install OS dependencies
+      run: apt update && apt install wget
+    - name: Install ImageMagick 7
+      run: |
+        t=$(mktemp) && \
+        wget 'https://dist.1-2.dev/imei.sh' -qO "$t" && \
+        bash "$t" --ci && \
+        rm "$t"
+    - name: Install Crystal dependencies
       run: shards install
     - name: Run tests
       run: crystal spec

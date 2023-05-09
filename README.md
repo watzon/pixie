@@ -4,13 +4,13 @@
 
 # Pixie
 
-Crystal bindings to ImageMagick 7. The goal is to have a full Crystal interface to the MagickWand API. Many functions also work with ImageMagick 6, but some do not. I would like to eventually find a way to support both versions.
+Crystal bindings to ImageMagick 7. The goal is to have a full Crystal interface to the MagickWand API. Many functions also work with ImageMagick 6, but some do not. I would like to eventually find a way to support both versions. For an easy way to build and install ImageMagick 7, see (IMEI)(https://github.com/SoftCreatR/imei).
 
 **NOTE**: This is a large undertaking as ImageMagick is a massive library. Contributions are always welcome!
 
 ## Requirements
 
-- *libMagickWand-7* must be installed, for instructions on Debian/Ubuntu see [this tutorial](https://www.tecmint.com/install-imagemagick-on-debian-ubuntu/).
+- *libMagickWand-7* must be installed
 - *pkg-config* must be available
 
 ## Installation
