@@ -892,13 +892,13 @@ module Pixie
     end
 
     def draw(brush : Brush)
-      LibMagick.magickDrawImage(self, Brush)
+      LibMagick.magickDrawImage(self, brush)
     end
 
     def draw(&block : Brush ->)
       brush = Brush.new
-      yield Brush
-      draw(Brush)
+      yield brush
+      draw(brush)
     end
 
     ##
@@ -1522,7 +1522,7 @@ module Pixie
     end
 
     def polaroid(brush : Brush, caption : String, angle : Float64, method : LibMagick::PixelInterpolateMethod = :average)
-      LibMagick.magickPolaroidImage(self, Brush, caption, angle, method)
+      LibMagick.magickPolaroidImage(self, brush, caption, angle, method)
     end
 
     def polynomial(n_terms : Int, terms : Float64)
