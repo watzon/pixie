@@ -7,6 +7,7 @@
 require "../src/pixie"
 
 img = Pixie::Image.new("spec/fixtures/animation.gif")
+
 # char* functions
 puts "- MagickGetImageFilename: " + img.filename
 puts "- MagickGetImageFormat: " + img.format

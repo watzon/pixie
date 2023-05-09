@@ -110,7 +110,7 @@ lib LibMagick
   fun magickGetImageInterlaceScheme = MagickGetImageInterlaceScheme(wand : MagickWand*) : InterlaceType
   fun magickGetImageInterpolateMethod = MagickGetImageInterpolateMethod(wand : MagickWand*) : PixelInterpolateMethod
   fun magickGetImageIterations = MagickGetImageIterations(wand : MagickWand*) : LibC::SizeT
-  fun magickGetImageLength = MagickGetImageLength(wand : MagickWand*, length : MagickSizeType*) : Bool
+  fun magickGetImageLength = MagickGetImageLength(wand : MagickWand*, length : LibC::SizeT*) : Bool
   fun magickGetImageMatteColor = MagickGetImageMatteColor(wand : MagickWand*, matte_color : PixelWand*) : Bool
   fun magickGetImageOrientation = MagickGetImageOrientation(wand : MagickWand*) : OrientationType
   fun magickGetImagePage = MagickGetImagePage(wand : MagickWand*, width : LibC::SizeT*, height : LibC::SizeT*, x : LibC::SSizeT*, y : LibC::SSizeT*) : Bool

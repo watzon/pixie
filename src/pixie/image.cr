@@ -55,7 +55,7 @@ module Pixie
     # Creates a new `Image` from the given `Pixie::Image` instance.
     #
     def self.new(image : Image)
-      new(image.to_unsafe_image)
+      new(image.get_image)
     end
 
     ##
@@ -103,7 +103,7 @@ module Pixie
       raise IndexError.new if (index < 0) || (index > self.size + 1)
       old_pos = self.pos
       self.set_pos(index)
-      image = Image.new(self.to_unsafe_image)
+      image = Image.new(self.get_image)
       self.set_pos(old_pos)
       image
     end
@@ -124,7 +124,7 @@ module Pixie
       image_info = LibMagick.cloneImageInfo(Pointer(LibMagick::ImageInfo).null)
       exception_info = LibMagick.acquireExceptionInfo
 
-      raw = LibMagick.interpretImageProperties(image_info, self.to_unsafe_image, format, exception_info)
+      raw = LibMagick.interpretImageProperties(image_info, self.get_image, format, exception_info)
       Helpers.assert_no_exception(exception_info.value)
 
       LibMagick.destroyExceptionInfo(exception_info)
@@ -152,7 +152,7 @@ module Pixie
       old_pos = self.pos
       self.rewind
       while self.has_next?
-        images << Image.new(self.to_unsafe_image)
+        images << Image.new(self.get_image)
         self.set_pos(self.pos + 1)
       end
       self.set_pos(old_pos)
@@ -160,11 +160,44 @@ module Pixie
     end
 
     ##
-    # Returns true if there are multiple images in the image set, and
-    # `pos` is less than the last image's index.
+    # Get a specific property of the image.
     #
-    def has_next?
-      LibMagick.magickHasNextImage(self)
+    # Example:
+    # ```crystal
+    # image = Image.new("/path/to/image.png")
+    # image.property("date:create") # => "2019:01:01 12:00:00"
+    # ```
+    #
+    def property(name : String)
+      raw = LibMagick.magickGetImageProperty(self, name)
+      return nil if raw.null?
+      String.new(raw)
+    end
+
+    ##
+    # Set a specific property of the image.
+    #
+    # Example:
+    # ```crystal
+    # image = Image.new("/path/to/image.png")
+    # image.set_property("exif:GPSLatitude", "40/1, 43/1, 54/1")
+    # ```
+    #
+    def set_property(name : String, value : String)
+      LibMagick.magickSetImageProperty(self, name, value)
+    end
+
+    ##
+    # Delete a specific property of the image.
+    #
+    # Example:
+    # ```crystal
+    # image = Image.new("/path/to/image.png")
+    # image.delete_property("exif:GPSLatitude")
+    # ```
+    #
+    def delete_property(name : String)
+      LibMagick.magickDeleteImageProperty(self, name)
     end
 
     ##
@@ -229,12 +262,29 @@ module Pixie
     end
 
     ##
-    # Return exif data for the image as a `Hash(String, String)`.
+    # Return EXIF data for the image as a `Hash(String, String)`.
     #
     def exif
-      self["%[EXIF:*]"].strip.split("\n").map do |line|
+      raw_data = self["%[EXIF:*]"].strip
+      return {} of String => String if raw_data.empty?
+
+      raw_data.split(/\n+/).map do |line|
         key, value = line.split("=", 2)
-        key = key.sub("exif:", "")
+        key = key.sub(/exif:/i, "")
+        [key, value]
+      end.to_h
+    end
+
+    ##
+    # Return XMP data for the image as a `Hash(String, String)`.
+    #
+    def xmp
+      raw_data = self["%[XMP:*]"].strip
+      return {} of String => String if raw_data.empty?
+
+      raw_data.split(/\n+/).map do |line|
+        key, value = line.split("=", 2)
+        key = key.sub(/xmp:/i, "")
         [key, value]
       end.to_h
     end
@@ -1606,9 +1656,38 @@ module Pixie
       LibMagick.magickResetImagePage(self, page)
     end
 
-    def resize(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos, preserve_aspect_ratio : Bool = false)
-      width, height = self.preserve_aspect_ratio(self.width, self.height, width, height) if preserve_aspect_ratio
+    ##
+    # Resize the image to fit within the specified dimensions. Stretching may occur.
+    #
+    def resize(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
       LibMagick.magickResizeImage(self, width, height, filter)
+    end
+
+    ##
+    # Resize the image to not be larger than the specified dimensions. No stretching will occur.
+    #
+    def resize_to_fit(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
+      width, height = preserve_aspect_ratio(self.width, self.height, width, height)
+      LibMagick.magickResizeImage(self, width, height, filter)
+    end
+
+    ##
+    # Resize the image to fill the specified dimensions, applying any necessary cropping.
+    #
+    def resize_to_fill(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
+      width, height = preserve_aspect_ratio(self.width, self.height, width, height)
+      LibMagick.magickResizeImage(self, width, height, filter)
+      crop(width, height, (self.width - width) / 2, (self.height - height) / 2)
+    end
+
+    ##
+    # Resize the image to fit within the specified dimensions and fills the
+    # remaining space with the specified background color.
+    #
+    def resize_and_pad(width : Int, height : Int, background : Pixel = Pixel::TRANSPARENT, filter : LibMagick::FilterType = :lanczos)
+      width, height = preserve_aspect_ratio(self.width, self.height, width, height)
+      LibMagick.magickResizeImage(self, width, height, filter)
+      extend(width, height, (self.width - width) / 2, (self.height - height) / 2, background)
     end
 
     def roll(x : Int, y : Int)
@@ -1805,7 +1884,7 @@ module Pixie
       IO::Memory.new(blob)
     end
 
-    def to_unsafe_image
+    def get_image
       LibMagick.getImageFromMagickWand(self)
     end
 

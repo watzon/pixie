@@ -31,8 +31,8 @@ lib LibMagick
   fun magickGetQuantumRange = MagickGetQuantumRange(range : LibC::SizeT*) : LibC::Char*
   fun magickGetReleaseDate = MagickGetReleaseDate : LibC::Char*
   fun magickGetResolution = MagickGetResolution(wand : MagickWand*, x : LibC::Double*, y : LibC::Double*) : Bool
-  fun magickGetResource = MagickGetResource(type : ResourceType) : MagickSizeType
-  fun magickGetResourceLimit = MagickGetResourceLimit(type : ResourceType) : MagickSizeType
+  fun magickGetResource = MagickGetResource(type : ResourceType) : LibC::SizeT
+  fun magickGetResourceLimit = MagickGetResourceLimit(type : ResourceType) : LibC::SizeT
   fun magickGetSamplingFactors = MagickGetSamplingFactors(wand : MagickWand*, number_factors : LibC::SizeT*) : LibC::Double*
   fun magickGetSize = MagickGetSize(wand : MagickWand*, columns : LibC::SizeT*, rows : LibC::SizeT*) : Bool
   fun magickGetSizeOffset = MagickGetSizeOffset(wand : MagickWand*, offset : LibC::SSizeT*) : Bool
@@ -62,7 +62,7 @@ lib LibMagick
   fun magickSetPassphrase = MagickSetPassphrase(wand : MagickWand*, passphrase : LibC::Char*) : Bool
   fun magickSetPointsize = MagickSetPointsize(wand : MagickWand*, pointsize : LibC::Double) : Bool
   fun magickSetProgressMonitor = MagickSetProgressMonitor(wand : MagickWand*, progress_monitor : MagickProgressMonitor, client_data : Void*) : MagickProgressMonitor
-  fun magickSetResourceLimit = MagickSetResourceLimit(type : ResourceType, limit : MagickSizeType) : Bool
+  fun magickSetResourceLimit = MagickSetResourceLimit(type : ResourceType, limit : LibC::SizeT) : Bool
   fun magickSetResolution = MagickSetResolution(wand : MagickWand*, x_resolution : LibC::Double, y_resolution : LibC::Double) : Bool
   fun magickSetSamplingFactors = MagickSetSamplingFactors(wand : MagickWand*, number_factors : LibC::SizeT, sampling_factors : LibC::Double*) : Bool
   fun magickSetSeed = MagickSetSeed(seed : LibC::ULong) : Void

@@ -7,15 +7,6 @@ lib LibMagick
   QuantumRange     = 65535.0 # 255.0
 
   type CacheView = Void # TODO
-  type MagickDoubleType = LibC::Double
-  type MagickMutexType = LibC::SizeT
-  type MagickOffsetType = LibC::SSizeT
-  type MagickRealType = MagickDoubleType
-  type MagickSizeType = LibC::SizeT
-  type MagickStatusType = LibC::UInt
-  type MagickThreadType = LibC::PidT
-  type Quantum = LibC::Float
-  type IndexPacket = Quantum
   type ResizeFilter = Void # TODO
 
   struct AffineMatrix
@@ -108,7 +99,7 @@ lib LibMagick
 
   struct ColorPacket
     pixel : PixelPacket
-    index : IndexPacket
+    index : LibC::Float
     count : LibC::SizeT
   end
 
@@ -161,7 +152,7 @@ lib LibMagick
     clip_mask : LibC::Char*
     bounds : SegmentInfo
     clip_units : ClipPathUnits
-    alpha : Quantum
+    alpha : LibC::Float
     render : Bool
     element_reference : ElementReference
     kerning : LibC::Double
@@ -314,7 +305,7 @@ lib LibMagick
     start_loop : LibC::SSizeT
     error : ErrorInfo
     timer : TimerInfo
-    progress_monitor : MagickProgressMonitor
+    progress_monitor : MagickProgressMonitor*
     client_data : Void*
     cache : Void*
     attributes : Void* # deprecated
@@ -417,7 +408,7 @@ lib LibMagick
     height : LibC::SizeT
     x : LibC::SSizeT
     y : LibC::SSizeT
-    values : MagickRealType*
+    values : LibC::Double*
     minimum : LibC::Double
     maximum : LibC::Double
     negative_range : LibC::Double
@@ -441,7 +432,7 @@ lib LibMagick
     target : LibC::Char*
     magic : LibC::UChar*
     length : LibC::SizeT
-    offset : MagickOffsetType
+    offset : LibC::SizeT
     exempt : Bool
     stealth : Bool
     signature : LibC::SizeT
@@ -459,7 +450,7 @@ lib LibMagick
     image_info : ImageInfo*
     magick : IsImageFormatHandler*
     format_type : MagickFormatType
-    flags : MagickStatusType
+    flags : LibC::UInt
     semaphore : SemaphoreInfo*
     signature : LibC::SizeT
     client_data : Void*
@@ -483,11 +474,11 @@ lib LibMagick
     matte : Bool
     fuzz : LibC::Double
     depth : LibC::SizeT
-    red : MagickRealType
-    green : MagickRealType
-    blue : MagickRealType
-    opacity : MagickRealType
-    index : MagickRealType
+    red : LibC::Double
+    green : LibC::Double
+    blue : LibC::Double
+    opacity : LibC::Double
+    index : LibC::Double
   end
 
   struct MontageInfo
@@ -552,10 +543,10 @@ lib LibMagick
   end
 
   struct PixelPacket
-    red : Quantum
-    green : Quantum
-    blue : Quantum
-    opacity : Quantum
+    red : LibC::Float
+    green : LibC::Float
+    blue : LibC::Float
+    opacity : LibC::Float
   end
 
   struct PixelWand
@@ -605,11 +596,11 @@ lib LibMagick
   end
 
   struct QuantumPixelPacket
-    red : Quantum
-    green : Quantum
-    blue : Quantum
-    opacity : Quantum
-    index : Quantum
+    red : LibC::Float
+    green : LibC::Float
+    blue : LibC::Float
+    opacity : LibC::Float
+    index : LibC::Float
   end
 
   struct RectangleInfo
@@ -651,9 +642,9 @@ lib LibMagick
   end
 
   # struct ResizeFilter
-  #   MagickRealType
-  #     (*filter)(const MagickRealType,const ResizeFilter *),
-  #     (*window)(const MagickRealType,const ResizeFilter *),
+  #   LibC::Double
+  #     (*filter)(const LibC::Double,const ResizeFilter *),
+  #     (*window)(const LibC::Double,const ResizeFilter *),
   #     support,        /* filter region of support - the filter support limit */
   #     window_support, /* window support, usally equal to support (expert only) */
   #     scale,          /* dimension scaling to fit window support (usally 1.0) */
@@ -676,8 +667,8 @@ lib LibMagick
   end
 
   struct SemaphoreInfo
-    mutex : MagickMutexType
-    id : MagickThreadType
+    mutex : LibC::SizeT
+    id : LibC::PidT
     reference_count : LibC::SSizeT
     signature : LibC::SizeT
   end
@@ -731,14 +722,14 @@ lib LibMagick
   end
 
   type CustomStreamHandler = LibC::UChar*, LibC::SizeT, Void* -> LibC::SSizeT*
-  type CustomStreamSeeker = MagickOffsetType, LibC::Int, Void* -> MagickOffsetType*
-  type CustomStreamTeller = Void* -> MagickOffsetType*
+  type CustomStreamSeeker = LibC::SizeT, LibC::Int, Void* -> LibC::SizeT*
+  type CustomStreamTeller = Void* -> LibC::SizeT*
   type DecodeImageHandler = ImageInfo*, ExceptionInfo* -> Image*
   type EncodeImageHandler = ImageInfo*, Image* -> Bool
   type ErrorHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
   type FatalErrorHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
   type IsImageFormatHandler = LibC::UChar*, LibC::SizeT -> Bool
-  type MagickProgressMonitor = LibC::Char*, MagickOffsetType, LibC::SizeT, Void* -> Bool
+  type MagickProgressMonitor = LibC::Char*, LibC::SizeT, LibC::SizeT, Void* -> Bool
   type StreamHandler = Image*, Void*, LibC::SizeT -> LibC::UInt
   type WarningHandler = ExceptionType, LibC::Char*, LibC::Char* -> Void*
 end

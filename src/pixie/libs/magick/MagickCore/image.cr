@@ -26,7 +26,7 @@ lib LibMagick
   fun referenceImage = ReferenceImage(image : Image*) : Image*
   fun resetImagePage = ResetImagePage(image : Image*, page : LibC::Char*) : Bool
   fun resetImagePixels = ResetImagePixels(image : Image*, exception : ExceptionInfo*) : Bool
-  fun setImageAlpha = SetImageAlpha(image : Image*, alpha : Quantum, exception : ExceptionInfo*) : Bool
+  fun setImageAlpha = SetImageAlpha(image : Image*, alpha : LibC::Float, exception : ExceptionInfo*) : Bool
   fun setImageBackgroundColor = SetImageBackgroundColor(image : Image*, exception : ExceptionInfo*) : Bool
   fun setImageChannelMask = SetImageChannelMask(image : Image*, channel_mask : ChannelType) : ChannelType
   fun setImageColor = SetImageColor(image : Image*, color : PixelInfo*, exception : ExceptionInfo*) : Bool
