@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.3.0
+- Fixed some bugs.
+- Added new `Image` methods:
+    - `#resize_to_fit`
+    - `#property`
+    - `#set_property`
+    - `#delete_property`
+    - `#xmp`
+- Renamed `Image#extend` back to `Image#extent` because `extend` is a reserved word in Crystal.
+- Removed some unnecessary alias types in `LibMagick`.
+
 ## 0.2.0
 - Improved `Image` and `Pixel` APIs.
 - Added comments to a lot of `Image` methods.

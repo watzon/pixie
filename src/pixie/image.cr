@@ -55,7 +55,7 @@ module Pixie
     # Creates a new `Image` from the given `Pixie::Image` instance.
     #
     def self.new(image : Image)
-      new(image.get_image)
+      new(image.to_unsafe_image)
     end
 
     ##
@@ -103,7 +103,7 @@ module Pixie
       raise IndexError.new if (index < 0) || (index > self.size + 1)
       old_pos = self.pos
       self.set_pos(index)
-      image = Image.new(self.get_image)
+      image = Image.new(self.to_unsafe_image)
       self.set_pos(old_pos)
       image
     end
@@ -124,7 +124,7 @@ module Pixie
       image_info = LibMagick.cloneImageInfo(Pointer(LibMagick::ImageInfo).null)
       exception_info = LibMagick.acquireExceptionInfo
 
-      raw = LibMagick.interpretImageProperties(image_info, self.get_image, format, exception_info)
+      raw = LibMagick.interpretImageProperties(image_info, self.to_unsafe_image, format, exception_info)
       Helpers.assert_no_exception(exception_info.value)
 
       LibMagick.destroyExceptionInfo(exception_info)
@@ -152,7 +152,7 @@ module Pixie
       old_pos = self.pos
       self.rewind
       while self.has_next?
-        images << Image.new(self.get_image)
+        images << Image.new(self.to_unsafe_image)
         self.set_pos(self.pos + 1)
       end
       self.set_pos(old_pos)
@@ -1873,7 +1873,7 @@ module Pixie
       IO::Memory.new(blob)
     end
 
-    def get_image
+    def to_unsafe_image
       LibMagick.getImageFromMagickWand(self)
     end
 
