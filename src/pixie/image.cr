@@ -201,6 +201,14 @@ module Pixie
     end
 
     ##
+    # Returns true if there are multiple images in the image set, and
+    # `pos` is less than the number of images.
+    #
+    def has_next?
+      LibMagick.magickHasNextImage(self)
+    end
+
+    ##
     # Returns the next image in the image set.
     #
     def next
@@ -1029,7 +1037,7 @@ module Pixie
     # Extend the image as defined by the geometry, gravity, and wand background color. Set the
     # (x,y) offset of the geometry to move the original wand relative to the extended wand.
     #
-    def extend(width : Int, height : Int, x : Int, y : Int)
+    def extent(width : Int, height : Int, x : Int, y : Int)
       LibMagick.magickExtentImage(self, width, height, x, y)
     end
 
@@ -1669,25 +1677,6 @@ module Pixie
     def resize_to_fit(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
       width, height = preserve_aspect_ratio(self.width, self.height, width, height)
       LibMagick.magickResizeImage(self, width, height, filter)
-    end
-
-    ##
-    # Resize the image to fill the specified dimensions, applying any necessary cropping.
-    #
-    def resize_to_fill(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
-      width, height = preserve_aspect_ratio(self.width, self.height, width, height)
-      LibMagick.magickResizeImage(self, width, height, filter)
-      crop(width, height, (self.width - width) / 2, (self.height - height) / 2)
-    end
-
-    ##
-    # Resize the image to fit within the specified dimensions and fills the
-    # remaining space with the specified background color.
-    #
-    def resize_and_pad(width : Int, height : Int, background : Pixel = Pixel::TRANSPARENT, filter : LibMagick::FilterType = :lanczos)
-      width, height = preserve_aspect_ratio(self.width, self.height, width, height)
-      LibMagick.magickResizeImage(self, width, height, filter)
-      extend(width, height, (self.width - width) / 2, (self.height - height) / 2, background)
     end
 
     def roll(x : Int, y : Int)

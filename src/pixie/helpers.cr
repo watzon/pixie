@@ -6,14 +6,18 @@ module Pixie::Helpers
     pointerof(point)
   end
 
+  ##
+  # Calculate the new width or height of an image, such that the aspect ratio
+  # is preserved and the new width or height is less than or equal to the
+  # specified maximum.
+  #
   private def preserve_aspect_ratio(from_w, from_h, to_w, to_h)
-    ar = from_w / from_h
-    if to_w > to_h
-      to_w = to_h * ar
+    max_dimension = [to_w, to_h].max
+    if from_w > from_h
+      [max_dimension, (max_dimension * from_h / from_w).to_i]
     else
-      to_h = to_w / ar
+      [(max_dimension * from_w / from_h).to_i, max_dimension]
     end
-    [to_w, to_h]
   end
 
   private def ptr_to_string_array(ptr, count)
