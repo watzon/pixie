@@ -7,7 +7,6 @@ module Pixie
 
     @wand : LibMagick::MagickWand*
 
-    ##
     # Creates a new `Image` with no data. This is the underlying method
     # used by all other constructors.
     #
@@ -15,20 +14,17 @@ module Pixie
       @wand = LibMagick.newMagickWand
     end
 
-    ##
     # Creates a new `Image` from the given `LibMagick::MagickWand` instance.
     #
     def initialize(@wand : LibMagick::MagickWand*)
     end
 
-    ##
     # Creates a new `Image` from the given `LibMagick::Image` instance.
     #
     def initialize(image : LibMagick::Image*)
       @wand = LibMagick.newMagickWandFromImage(image)
     end
 
-    ##
     # Creates a new `Image` from the given stream. See `Image#read` for
     # more information.
     #
@@ -39,7 +35,6 @@ module Pixie
       end
     end
 
-    ##
     # Creates a new `Image` from the given Array, where each element is
     # a layer in the image.
     #
@@ -51,14 +46,12 @@ module Pixie
       img
     end
 
-    ##
     # Creates a new `Image` from the given `Pixie::Image` instance.
     #
     def self.new(image : Image)
       new(image.to_unsafe_image)
     end
 
-    ##
     # Creates a new blank image using the given width, height, and background
     # color. The default background color is transparent, and the format
     # is set to PNG.
@@ -76,7 +69,6 @@ module Pixie
       img
     end
 
-    ##
     # Create an image from a map of pixels.
     #
     # Example:
@@ -90,7 +82,6 @@ module Pixie
       image
     end
 
-    ##
     # Get the individual image (layer) at the given index.
     #
     # Example:
@@ -108,7 +99,6 @@ module Pixie
       image
     end
 
-    ##
     # Get image details using special formatting characters.
     # See https://imagemagick.org/script/escape.php
     #
@@ -137,7 +127,6 @@ module Pixie
       self.signature == other.signature
     end
 
-    ##
     # Returns an `Array(Image)`, where each image is a layer in the image. Useful for
     # `gif`, `pdf`, `psd`, and any other image format with layers.
     #
@@ -159,7 +148,6 @@ module Pixie
       images
     end
 
-    ##
     # Get a specific property of the image.
     #
     # Example:
@@ -174,7 +162,6 @@ module Pixie
       String.new(raw)
     end
 
-    ##
     # Set a specific property of the image.
     #
     # Example:
@@ -187,7 +174,6 @@ module Pixie
       LibMagick.magickSetImageProperty(self, name, value)
     end
 
-    ##
     # Delete a specific property of the image.
     #
     # Example:
@@ -200,7 +186,6 @@ module Pixie
       LibMagick.magickDeleteImageProperty(self, name)
     end
 
-    ##
     # Returns true if there are multiple images in the image set, and
     # `pos` is less than the number of images.
     #
@@ -208,7 +193,6 @@ module Pixie
       LibMagick.magickHasNextImage(self)
     end
 
-    ##
     # Returns the next image in the image set.
     #
     def next
@@ -216,7 +200,6 @@ module Pixie
       Image.new(wand)
     end
 
-    ##
     # Returns true if there are multiple images in the image set, and
     # `pos` is greater than zero.
     #
@@ -224,7 +207,6 @@ module Pixie
       LibMagick.magickHasPreviousImage(self)
     end
 
-    ##
     # Returns the previous image in the image set.
     #
     def prev
@@ -232,7 +214,6 @@ module Pixie
       Image.new(wand)
     end
 
-    ##
     # Returns the current position in the image set. Will always be
     # zero for non-animated images.
     #
@@ -240,7 +221,6 @@ module Pixie
       LibMagick.magickGetIteratorIndex(self).to_i
     end
 
-    ##
     # Sets the current position in the image set. Will always be
     # zero for non-animated images.
     #
@@ -248,28 +228,24 @@ module Pixie
       LibMagick.magickSetIteratorIndex(self, index)
     end
 
-    ##
     # Reset the underlying iterator to the first image in the set.
     #
     def rewind
       LibMagick.magickResetIterator(self)
     end
 
-    ##
     # Return the width of the image.
     #
     def width
       LibMagick.magickGetImageWidth(self).to_i
     end
 
-    ##
     # Return the height of the image.
     #
     def height
       LibMagick.magickGetImageHeight(self).to_i
     end
 
-    ##
     # Return EXIF data for the image as a `Hash(String, String)`.
     #
     def exif
@@ -283,7 +259,6 @@ module Pixie
       end.to_h
     end
 
-    ##
     # Return XMP data for the image as a `Hash(String, String)`.
     #
     def xmp
@@ -297,14 +272,12 @@ module Pixie
       end.to_h
     end
 
-    ##
     # Returns true if the image has an alpha channel.
     #
     def has_alpha?
       LibMagick.magickGetImageAlphaChannel(self)
     end
 
-    ##
     # Set the image's alpha channel to the given `LibMagick::AlphaChannelOption`.
     # Valid options are:
     # - `:undefined`
@@ -328,7 +301,6 @@ module Pixie
       LibMagick.magickSetImageAlphaChannel(self, value)
     end
 
-    ##
     # Return the background color of the image as a `Pixie::Pixel`.
     #
     def background_color
@@ -337,14 +309,12 @@ module Pixie
       Pixel.new(pw)
     end
 
-    ##
     # Set the background color of the image to the given `Pixie::Pixel`.
     #
     def set_background_color(background : Pixel)
       LibMagick.magickSetImageBackgroundColor(self, background)
     end
 
-    ##
     # Get the image as a `Bytes` instance.
     #
     def blob
@@ -353,7 +323,6 @@ module Pixie
       Bytes.new(data, size)
     end
 
-    ##
     # Returns the chromaticity blue primary point for the image as
     # an x, y, z tuple.
     #
@@ -362,7 +331,6 @@ module Pixie
       {x, y, z}
     end
 
-    ##
     # Set the chromaticity blue primary point for the image to the
     # given x, y, and z values.
     #
@@ -370,7 +338,6 @@ module Pixie
       LibMagick.magickSetImageBluePrimary(self, x, y, z)
     end
 
-    ##
     # Returns the chromaticity green primary point for the image as
     # an x, y, z tuple.
     #
@@ -379,7 +346,6 @@ module Pixie
       {x, y, z}
     end
 
-    ##
     # Set the chromaticity green primary point for the image to the
     # given x, y, and z values.
     #
@@ -387,7 +353,6 @@ module Pixie
       LibMagick.magickSetImageGreenPrimary(self, x, y, z)
     end
 
-    ##
     # Returns the chromaticity red primary point for the image as
     # an x, y, z tuple.
     #
@@ -396,7 +361,6 @@ module Pixie
       {x, y, z}
     end
 
-    ##
     # Set the chromaticity red primary point for the image to the
     # given x, y, and z values.
     #
@@ -404,7 +368,6 @@ module Pixie
       LibMagick.magickSetImageRedPrimary(self, x, y, z)
     end
 
-    ##
     # Return the border color of the image as a `Pixie::Pixel`.
     #
     def border_color
@@ -413,7 +376,6 @@ module Pixie
       Pixel.new(pw)
     end
 
-    ##
     # Set the border color of the image to the given `Pixie::Pixel`.
     #
     # Example:
@@ -426,14 +388,12 @@ module Pixie
       LibMagick.magickSetImageBorderColor(self, color)
     end
 
-    ##
     # Apply an adaptive blur to the image.
     #
     def adaptive_blur(radius : Float, sigma : Float)
       LibMagick.magickAdaptiveBlurImage(self, radius, sigma)
     end
 
-    ##
     # Apply an adaptive resize to the image.
     #
     def adaptive_resize(width : Int, height : Int, preserve_aspect_ratio : Bool = false)
@@ -441,28 +401,24 @@ module Pixie
       LibMagick.magickAdaptiveResizeImage(self, width, height)
     end
 
-    ##
     # Apply an adaptive sharpen to the image.
     #
     def adaptive_sharpen(radius : Float, sigma : Float)
       LibMagick.magickAdaptiveSharpenImage(self, radius, sigma)
     end
 
-    ##
     # Apply an adaptive threshold to the image.
     #
     def adaptive_threshold(width : Int, height : Int, bias : Float)
       LibMagick.magickAdaptiveThresholdImage(self, width, height, bias)
     end
 
-    ##
     # Add an image to the image set.
     #
     def add_image(image : Image)
       LibMagick.magickAddImage(self, image)
     end
 
-    ##
     # Add noise to the image. Valid noise types are:
     # - `:undefined`
     # - `:uniform`
@@ -485,14 +441,12 @@ module Pixie
       LibMagick.magickAnnotateImage(self, Brush, x, y, text)
     end
 
-    ##
     # Animate the image sequence using the given server name.
     #
     def animate(server_name : String = ":0")
       LibMagick.magickAnimateImages(self, server_name)
     end
 
-    ##
     # Append all images together into a single image.
     #
     def append(top_to_bottom : Bool = false)
@@ -500,28 +454,24 @@ module Pixie
       Image.new(wand)
     end
 
-    ##
     # Automatically adjust the gamma level of this image.
     #
     def auto_gamma
       LibMagick.magickAutoGammaImage(self)
     end
 
-    ##
     # Automatically adjust the level of this image.
     #
     def auto_level
       LibMagick.magickAutoLevelImage(self)
     end
 
-    ##
     # Automatically orient the image based on its EXIF data.
     #
     def auto_orient
       LibMagick.magickAutoOrientImage(self)
     end
 
-    ##
     # Automatically threshold the image using the given method.
     # Valid methods are:
     # - `:undefined`
@@ -533,68 +483,58 @@ module Pixie
       LibMagick.magickAutoThresholdImage(self, method)
     end
 
-    ##
     # Set the black threshold of the image.
     #
     def black_threshold(threshold : Pixel)
       LibMagick.magickBlackThresholdImage(self, threshold)
     end
 
-    ##
     # Set the blue shift factor of the image.
     #
     def blue_shift(factor : Float)
       LibMagick.magickBlueShiftImage(self, factor)
     end
 
-    ##
     # Blur the image using the given radius and sigma.
     #
     def blur(radius : Float, sigma : Float)
       LibMagick.magickBlurImage(self, radius, sigma)
     end
 
-    ##
     # Add a border to the image using the given `Pixie::Pixel`.
     def border(border_color : Pixel, width : Int, height : Int, compose : LibMagick::CompositeOperator = :undefined)
       LibMagick.magickBorderImage(self, border_color, width, height, compose)
     end
 
-    ##
     # Apply a brightness and contrast adjustment to the image.
     def brightness_contrast(brightness : Float, contrast : Float)
       LibMagick.magickBrightnessContrastImage(self, brightness, contrast)
     end
 
-    ##
     # Detect edges in the image using the given radius.
     #
     def canny_edge(radius : Float, sigma : Float, lower_percent : Float, upper_percent : Float)
       LibMagick.magickCannyEdgeImage(self, radius, sigma, lower_percent, upper_percent)
     end
 
-    ##
     # Applies a channel expression to the specified image.
     #
     def channel_fx(expression : String)
       LibMagick.magickChannelFxImage(self, expression)
     end
 
-    ##
     # Apply a charcoal effect to the image using the given radius and sigma.
     #
     def charcoal(radius : Float, sigma : Float)
       LibMagick.magickCharcoalImage(self, radius, sigma)
     end
 
-    ##
     # Removes a region of a canvas and collapses the canvas to occupy the removed portion.
     #
     def chop(width : Int, height : Int, x : Int, y : Int)
       LibMagick.magickChopImage(self, width, height, x, y)
     end
 
-    ##
     # a variant of adaptive histogram equalization in which the contrast amplification
     # is limited, so as to reduce this problem standard non-contrast
     # limited AHE.
@@ -603,21 +543,18 @@ module Pixie
       LibMagick.magickCLAHEImage(self, width, height, number_bins, clip_limit)
     end
 
-    ##
     # Restricts the color range from 0 to the quantum depth.
     #
     def clamp
       LibMagick.magickClampImage(self)
     end
 
-    ##
     # Clips along the first path from the 8BIM profile, if present.
     #
     def clip
       LibMagick.magickClipImage(self)
     end
 
-    ##
     # Clips along the named paths from the 8BIM profile, if present.
     # Later operations take effect inside the path. Id may be a number if
     # preceded with #, to work on a numbered path, e.g., "#1" to use the first
@@ -627,14 +564,12 @@ module Pixie
       LibMagick.magickClipImagePath(self, pathname, inside)
     end
 
-    ##
     # Replaces colors in the image from a color lookup table.
     #
     def clut(clut : Image, method : LibMagick::PixelInterpolateMethod)
       LibMagick.magickClutImage(self, clut, method)
     end
 
-    ##
     # Composites a set of images while respecting any page offsets and disposal methods.
     # GIF, MIFF, and MNG animation sequences typically start with an image background
     # and each subsequent image varies in size and offset. Returns a new sequence where
@@ -645,7 +580,6 @@ module Pixie
       LibMagick.magickCoalesceImages(self)
     end
 
-    ##
     # accepts a lightweight Color Correction Collection (CCC) file which solely
     # contains one or more color corrections and applies the color correction to
     # the image. Here is a sample CCC file:
@@ -670,14 +604,12 @@ module Pixie
       LibMagick.magickColorDecisionListImage(self, collection)
     end
 
-    ##
     # Blends the fill color with each pixel in the image.
     #
     def colorize(colorize : Pixel, blend : Pixel)
       LibMagick.magickColorizeImage(self, coloize, blend)
     end
 
-    ##
     # Apply color transformation to an image. The method permits saturation
     # changes, hue rotation, luminance to alpha, and various other effects.
     # Although variable-sized transformation matrices can be used, typically
@@ -690,7 +622,6 @@ module Pixie
       LibMagick.magickColorMatrixImage(sel, matrix)
     end
 
-    ##
     # Combines one or more images into a single image. The grayscale value
     # of the pixels of each image in the sequence is assigned in order to
     # the specified channels of the combined image. The typical ordering
@@ -700,14 +631,12 @@ module Pixie
       LibMagick.magickCombineImages(self, colorspace)
     end
 
-    ##
     # Adds a comment to your image.
     #
     def comment(comment : String)
       LibMagick.magickCommentImage(self, comment)
     end
 
-    ##
     # Compares each image with the next in a sequence and returns the maximum
     # bounding region of any pixel differences it discovers.
     #
@@ -716,7 +645,6 @@ module Pixie
       new(wand)
     end
 
-    ##
     # Compares an image to a reconstructed image and returns the specified
     # difference image.
     #
@@ -724,7 +652,6 @@ module Pixie
       LibMagick.magickCompareImages(self, reference, metric, distortion)
     end
 
-    ##
     # Performs complex mathematics on an image sequence using the given
     # oprtator. Valid operators are:
     # - `:undefined`
@@ -740,7 +667,6 @@ module Pixie
       LibMagick.magickComplexImages(self, op)
     end
 
-    ##
     # Composites two images together using the given operator.
     # See `Image#complex` for a list of valid operators.
     #
@@ -748,7 +674,6 @@ module Pixie
       LibMagick.magickCompositeImage(self, source, operator, clip_to_self, x, y)
     end
 
-    ##
     # Composites two images together using the given operator and gravity.
     # See `Image#complex` for a list of valid operators. Valid
     # gravities are:
@@ -769,7 +694,6 @@ module Pixie
       LibMagick.magickCompositeImageGravity(self, source, compose, gravity)
     end
 
-    ##
     # Composite the images in the source wand over
     # the images in the destination wand in sequence, starting with the
     # current image in both lists. Each layer from the two image lists are
@@ -798,7 +722,6 @@ module Pixie
       LibMagick.magickCompositeLayers(self, source, compose, x, y)
     end
 
-    ##
     # Returns the connected-components of the image uniquely labeled. The returned
     # connected components image colors member defines the number of
     # unique objects. Choose from 4 or 8-way connectivity.
@@ -811,7 +734,6 @@ module Pixie
       end
     end
 
-    ##
     # Enhances the intensity differences between the lighter and darker elements of the image.
     # Set sharpen to a value other than 0 to increase the image contrast otherwise the
     # contrast is reduced.
@@ -820,7 +742,6 @@ module Pixie
       LibMagick.magickContrastImage(self, sharpen)
     end
 
-    ##
     # Enhances the contrast of a color image by adjusting the pixels color to span the entire
     # range of colors available. You can also reduce the influence of a particular channel
     # with a gamma value of 0.
@@ -828,21 +749,18 @@ module Pixie
       LibMagick.magickContrastStretchImage(self, black_point, white_point)
     end
 
-    ##
     # Applies a custom convolution kernel to the image.
     #
     def convolve(kernel : LibMagick::KernelInfo)
       LibMagick.magickConvolveImage(self, kernel)
     end
 
-    ##
     # Extracts a region of the image.
     #
     def crop(width : Int, height : Int, x : Int, y : Int)
       LibMagick.magickCropImage(self, width, height, x, y)
     end
 
-    ##
     # Displaces an image's colormap by a given number of positions. If you cycle the
     # colormap a number of times you can produce a psychodelic effect.
     #
@@ -850,7 +768,6 @@ module Pixie
       LibMagick.magickCycleColormapImage(self, displace)
     end
 
-    ##
     # Adds an image to the wand comprised of the pixel data you supply. The pixel data must
     # be in scanline order top-to-bottom. The data can be char, short int,
     # int, float, or double. Float and double require the pixels to
@@ -868,14 +785,12 @@ module Pixie
       LibMagick.magickConstituteImage(self, columns, rows, map, storage, pixels)
     end
 
-    ##
     # Converts cipher pixels to plain pixels.
     #
     def decipher(passphrase : String)
       LibMagick.magickDecipherImage(self, passphrase)
     end
 
-    ##
     # Compares each image with the next in a sequence and returns the maximum bounding
     # region of any pixel differences it discovers.
     #
@@ -884,7 +799,6 @@ module Pixie
       new(wand)
     end
 
-    ##
     # Removes skew from the image. Skew is an artifact that occurs in scanned images
     # because of the camera being misaligned, imperfections in the scanning or surface,
     # or simply because the paper was not placed completely flat when scanned.
@@ -893,28 +807,24 @@ module Pixie
       LibMagick.magickDeskewImage(self, threshold)
     end
 
-    ##
     # Reduces the speckle noise in an image while perserving the edges of the original image.
     #
     def despeckle
       LibMagick.magickDespeckleImage(self)
     end
 
-    ##
     # Displays an image using the given X server.
     #
     def display(x_server : String = ":0")
       LibMagick.magickDisplayImage(self, x_server)
     end
 
-    ##
     # Displays an image sequence using the given X server.
     #
     def displays(x_server : String = ":0")
       LibMagick.magickDisplayImages(self, x_server)
     end
 
-    ##
     # Distorts an image using various distortion methods, by mapping color lookups of the
     # source image to a new destination image usally of the same size as the source
     # image, unless `best_fit` is set to true.
@@ -959,14 +869,12 @@ module Pixie
       draw(brush)
     end
 
-    ##
     # Enhances edges within the image with a convolution filter of the given radius.
     # Using a radius of 0 will select a suitable radius for you.
     def edge(radius : Float = 0.0)
       LibMagick.magickEdgeImage(self, radius)
     end
 
-    ##
     # Enhance edges within the image with a convolution filter of the given radius and sigma.
     # Using a radius of 0 will select a suitable radius for you.
     def emboss(radius : Float = 0.0, sigma : Float = 0.0)
@@ -995,7 +903,6 @@ module Pixie
       Image.new(wand)
     end
 
-    ##
     # Extract pixel data from the image and return it as a multi-dimensional array of rows and columns, each
     # containing an array of pixel data represnting the given map (defaulting to RGB). The map can be
     # any combination or order of:
@@ -1033,7 +940,6 @@ module Pixie
       end
     end
 
-    ##
     # Extend the image as defined by the geometry, gravity, and wand background color. Set the
     # (x,y) offset of the geometry to move the original wand relative to the extended wand.
     #
@@ -1315,7 +1221,6 @@ module Pixie
       LibMagick.magickSetImagePage(self, width, height, x, y)
     end
 
-    ##
     # Get the pixel at the given x and y coordinates.
     #
     def pixel(x, y)
@@ -1324,7 +1229,6 @@ module Pixie
       pixel
     end
 
-    ##
     # Set the pixel at the given x and y coordinates.
     #
     def set_pixel(x : Int, y : Int, color : Pixel)
@@ -1503,7 +1407,6 @@ module Pixie
       LibMagick.magickModulateImage(self, brightness, saturation, hue)
     end
 
-    ##
     # Create a montage from the images in the current set.
     #
     def montage(thumbnail_geometry : String? = nil, tile_geometry : String? = nil, brush : Brush = Brush.new, mode : LibMagick::MontageMode = :undefined, frame : String? = nil)
@@ -1664,14 +1567,12 @@ module Pixie
       LibMagick.magickResetImagePage(self, page)
     end
 
-    ##
     # Resize the image to fit within the specified dimensions. Stretching may occur.
     #
     def resize(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
       LibMagick.magickResizeImage(self, width, height, filter)
     end
 
-    ##
     # Resize the image to not be larger than the specified dimensions. No stretching will occur.
     #
     def resize_to_fit(width : Int, height : Int, filter : LibMagick::FilterType = :lanczos)
@@ -1867,6 +1768,22 @@ module Pixie
 
     def size
       LibMagick.magickGetNumberImages(self).to_i
+    end
+
+    # Convert the image into a Stumpy compatible canvas.
+    #
+    # Note: Requires stumpy_core to be installed and imported.
+    #
+    def to_stumpy_canvas
+      new_image = self.clone
+      new_image.set_depth(16)
+      canvas = StumpyCore::Canvas.new(width, height)
+      canvas.map! do |_, x, y|
+        pixel = new_image.pixel(x, y)
+        pixel = [pixel.red, pixel.green, pixel.blue, pixel.alpha].map { |c| (c * 65535.0).to_u16 }
+        StumpyCore::RGBA.new(pixel[0], pixel[1], pixel[2], pixel[3])
+      end
+      canvas
     end
 
     def to_io

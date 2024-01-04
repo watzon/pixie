@@ -6,7 +6,6 @@ module Pixie::Helpers
     pointerof(point)
   end
 
-  ##
   # Calculate the new width or height of an image, such that the aspect ratio
   # is preserved and the new width or height is less than or equal to the
   # specified maximum.
